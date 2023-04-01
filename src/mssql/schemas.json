@@ -1,0 +1,249 @@
+[
+  {
+    "sourceTableName": "admUsers",
+    "destinationTableName": "user",
+    "isDone": false,
+    "fields": [
+      {
+        "source": "UserID",
+        "destination": "id"
+      },
+      {
+        "source": "UserName",
+        "destination": "name"
+      },
+      {
+        "source": "UserFullName",
+        "destination": "full_name"
+      },
+      {
+        "source": "Password",
+        "destination": "password"
+      },
+      {
+        "source": "EmailAddress",
+        "destination": "email"
+      },
+      {
+        "source": "UserStatus",
+        "destination": "status"
+      }
+    ],
+    "drop": "DROP TABLE IF EXISTS user;",
+    "create": "CREATE TABLE user (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(45) NOT NULL, full_name VARCHAR(45), password VARCHAR(45), email VARCHAR(45), status TINYINT NOT NULL, PRIMARY KEY (id));",
+    "insert": "INSERT INTO user VALUES ?"
+  },
+  {
+    "sourceTableName": "tblContactType",
+    "destinationTableName": "contact_type",
+    "isDone": false,
+    "fields": [
+      {
+        "source": "ID",
+        "destination": "id"
+      },
+      {
+        "source": "ContactDescription",
+        "destination": "name"
+      }
+    ],
+    "drop": "DROP TABLE IF EXISTS contact_type;",
+    "create": "CREATE TABLE contact_type (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(45) NOT NULL, PRIMARY KEY (id));",
+    "insert": "INSERT INTO contact_type VALUES ?"
+  },
+  {
+    "sourceTableName": "empContactInfo",
+    "destinationTableName": "contact_info",
+    "isDone": false,
+    "fields": [
+      {
+        "source": "ID",
+        "destination": "id"
+      },
+      {
+        "source": "EmpID",
+        "destination": "delegate"
+      },
+      {
+        "source": "ContactType",
+        "destination": "type"
+      },
+      {
+        "source": "ContactValue",
+        "destination": "value",
+        "lowercase": true
+      }
+    ],
+    "drop": "DROP TABLE IF EXISTS contact_info;",
+    "create": "CREATE TABLE contact_info (id INT NOT NULL AUTO_INCREMENT, delegate INT NOT NULL, type SMALLINT NOT NULL, value VARCHAR(60), PRIMARY KEY (id));",
+    "insert": "INSERT INTO contact_info VALUES ?"
+  },
+  {
+    "sourceTableName": "empTraining",
+    "destinationTableName": "training",
+    "isDone": false,
+    "fields": [
+      {
+        "source": "ID",
+        "destination": "id"
+      },
+      {
+        "source": "EmpID",
+        "destination": "delegate"
+      },
+      {
+        "source": "CourseCode",
+        "destination": "course"
+      },
+      {
+        "source": "Starting",
+        "destination": "start"
+      },
+      {
+        "source": "Ending",
+        "destination": "expiry"
+      },
+      {
+        "source": "Certificate",
+        "destination": "certificate"
+      }
+    ],
+    "drop": "DROP TABLE IF EXISTS training;",
+    "create": "CREATE TABLE training (id INT NOT NULL AUTO_INCREMENT, delegate INT NOT NULL, course CHAR(6) NOT NULL, start DATETIME NOT NULL, expiry DATETIME, certificate VARCHAR(30), PRIMARY KEY (id));",
+    "insert": "INSERT INTO training VALUES ?"
+  },
+  {
+    "sourceTableName": "tblAgencies",
+    "destinationTableName": "agency",
+    "isDone": false,
+    "fields": [
+      {
+        "source": "ID",
+        "destination": "id"
+      },
+      {
+        "source": "agencode",
+        "destination": "code"
+      },
+      {
+        "source": "agendesc",
+        "destination": "name"
+      },
+      {
+        "source": "AgeActive",
+        "destination": "status"
+      }
+    ],
+    "drop": "DROP TABLE IF EXISTS agency;",
+    "create": "CREATE TABLE agency (id INT NOT NULL AUTO_INCREMENT, code VARCHAR(6) NOT NULL, name VARCHAR(60) NOT NULL, status TINYINT NOT NULL, PRIMARY KEY (id));",
+    "insert": "INSERT INTO agency VALUES ?"
+  },
+  {
+    "sourceTableName": "tblCertificateNumbers",
+    "destinationTableName": "certificate",
+    "isDone": false,
+    "fields": [
+      {
+        "source": "RecordID",
+        "destination": "record"
+      },
+      {
+        "source": "Certificate_number",
+        "destination": "number"
+      }
+    ],
+    "drop": "DROP TABLE IF EXISTS certificate;",
+    "create": "CREATE TABLE certificate (record INT, number INT);",
+    "insert": "INSERT INTO certificate VALUES ?"
+  },
+  {
+    "sourceTableName": "tblCivilStatus",
+    "destinationTableName": "civil_status",
+    "isDone": false,
+    "fields": [
+      {
+        "source": "CivilStatusID",
+        "destination": "id"
+      },
+      {
+        "source": "CivilStatusDesc",
+        "destination": "name"
+      }
+    ],
+    "drop": "DROP TABLE IF EXISTS civil_status;",
+    "create": "CREATE TABLE civil_status (id CHAR(1) NOT NULL, name VARCHAR(45) NOT NULL, PRIMARY KEY (id));",
+    "insert": "INSERT INTO civil_status VALUES ?"
+  },
+  {
+    "sourceTableName": "tblContactType",
+    "isDone": true
+  },
+  {
+    "sourceTableName": "tblCountries",
+    "isDone": true
+  },
+  {
+    "sourceTableName": "tblCourseCourseDescription",
+    "isDone": true
+  },
+  {
+    "sourceTableName": "tblCourseDescriptions",
+    "isDone": true
+  },
+  {
+    "sourceTableName": "vwCertificateFormats",
+    "destinationTableName": "certificate_type",
+    "isDone": false,
+    "fields": [
+      {
+        "source": "ID",
+        "destination": "id"
+      },
+      {
+        "source": "Type",
+        "destination": "name"
+      }
+    ],
+    "drop": "DROP TABLE IF EXISTS certificate_type;",
+    "create": "CREATE TABLE certificate_type (id CHAR(1) NOT NULL, name VARCHAR(45) NOT NULL, PRIMARY KEY (id));",
+    "insert": "INSERT INTO certificate_type VALUES ?"
+  },
+  {
+    "sourceTableName": "tblHSECourses",
+    "isDone": true
+  },
+  {
+    "sourceTableName": "tblNationalities",
+    "isDone": true
+  },
+  {
+    "sourceTableName": "tblOpitoGeneratedRecords",
+    "isDone": true
+  },
+  {
+    "sourceTableName": "tblPersonnel",
+    "isDone": true
+  },
+  {
+    "sourceTableName": "tblPositions",
+    "isDone": true
+  },
+  {
+    "sourceTableName": "tblSex",
+    "destinationTableName": "sex",
+    "isDone": false,
+    "fields": [
+      {
+        "source": "SexID",
+        "destination": "id"
+      },
+      {
+        "source": "SexName",
+        "destination": "name"
+      }
+    ],
+    "drop": "DROP TABLE IF EXISTS sex;",
+    "create": "CREATE TABLE sex (id CHAR(1) NOT NULL, name VARCHAR(45) NOT NULL, PRIMARY KEY (id));",
+    "insert": "INSERT INTO sex VALUES ?"
+  }
+]
