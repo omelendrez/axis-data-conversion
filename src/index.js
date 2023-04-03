@@ -33,6 +33,7 @@ async function run() {
 
     let totalRecords = 0
     let processed = 0
+    let tables = 0
 
     await Promise.all(
       schemas
@@ -41,9 +42,11 @@ async function run() {
           const [read, inserted] = await data.convert(sql, mySql, t)
           totalRecords += read
           processed += inserted
+          tables++
         })
     )
 
+    console.log('Total tables processed:', tables)
     console.log('Total records read from MSSQL:', totalRecords)
     console.log('Total records inserted to MySQL:', processed)
     console.log()

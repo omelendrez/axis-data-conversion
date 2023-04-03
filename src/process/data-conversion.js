@@ -7,6 +7,10 @@ function convert(sql, mySql, t) {
 
       await mySql.query(t.drop)
       await mySql.query(t.create)
+      if (t.index) {
+        await mySql.query(t.index)
+      }
+
       const records = []
 
       await result.recordset.forEach(async (r) => {

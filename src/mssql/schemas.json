@@ -71,12 +71,13 @@
       {
         "source": "ContactValue",
         "destination": "value",
-        "lowercase": true
+        "lowercase": false
       }
     ],
     "drop": "DROP TABLE IF EXISTS contact_info;",
     "create": "CREATE TABLE contact_info (id INT NOT NULL AUTO_INCREMENT, delegate INT NOT NULL, type SMALLINT NOT NULL, value VARCHAR(60), PRIMARY KEY (id));",
-    "insert": "INSERT INTO contact_info VALUES ?"
+    "insert": "INSERT INTO contact_info VALUES ?",
+    "index": "ALTER TABLE contact_info ADD INDEX contact_info_delegate_idx (delegate ASC) VISIBLE;"
   },
   {
     "sourceTableName": "empTraining",
@@ -114,7 +115,7 @@
   },
   {
     "sourceTableName": "tblAgencies",
-    "destinationTableName": "agency",
+    "destinationTableName": "company",
     "isDone": false,
     "fields": [
       {
@@ -134,9 +135,10 @@
         "destination": "status"
       }
     ],
-    "drop": "DROP TABLE IF EXISTS agency;",
-    "create": "CREATE TABLE agency (id INT NOT NULL AUTO_INCREMENT, code VARCHAR(6) NOT NULL, name VARCHAR(60) NOT NULL, status TINYINT NOT NULL, PRIMARY KEY (id));",
-    "insert": "INSERT INTO agency VALUES ?"
+    "drop": "DROP TABLE IF EXISTS company;",
+    "create": "CREATE TABLE company (id INT NOT NULL AUTO_INCREMENT, code VARCHAR(6) NOT NULL, name VARCHAR(60) NOT NULL, status TINYINT NOT NULL, PRIMARY KEY (id));",
+    "insert": "INSERT INTO company VALUES ?",
+    "index": "ALTER TABLE company ADD INDEX company_code_idx (code ASC) VISIBLE;"
   },
   {
     "sourceTableName": "tblCertificateNumbers",
@@ -157,38 +159,44 @@
     "insert": "INSERT INTO certificate VALUES ?"
   },
   {
-    "sourceTableName": "tblCivilStatus",
-    "destinationTableName": "civil_status",
+    "sourceTableName": "tblCourseCourseDescription",
+    "destinationTableName": "course_item_rel",
     "isDone": false,
     "fields": [
       {
-        "source": "CivilStatusID",
+        "source": "ID",
         "destination": "id"
       },
       {
-        "source": "CivilStatusDesc",
-        "destination": "name"
+        "source": "CourseID",
+        "destination": "course"
+      },
+      {
+        "source": "DescriptionID",
+        "destination": "item"
       }
     ],
-    "drop": "DROP TABLE IF EXISTS civil_status;",
-    "create": "CREATE TABLE civil_status (id CHAR(1) NOT NULL, name VARCHAR(45) NOT NULL, PRIMARY KEY (id));",
-    "insert": "INSERT INTO civil_status VALUES ?"
-  },
-  {
-    "sourceTableName": "tblContactType",
-    "isDone": true
-  },
-  {
-    "sourceTableName": "tblCountries",
-    "isDone": true
-  },
-  {
-    "sourceTableName": "tblCourseCourseDescription",
-    "isDone": true
+    "drop": "DROP TABLE IF EXISTS course_item_rel;",
+    "create": "CREATE TABLE course_item_rel (id INT NOT NULL AUTO_INCREMENT, course SMALLINT, item SMALLINT, PRIMARY KEY (id));",
+    "insert": "INSERT INTO course_item_rel VALUES ?"
   },
   {
     "sourceTableName": "tblCourseDescriptions",
-    "isDone": true
+    "destinationTableName": "course_item",
+    "isDone": false,
+    "fields": [
+      {
+        "source": "ID",
+        "destination": "id"
+      },
+      {
+        "source": "CourseDescription",
+        "destination": "name"
+      }
+    ],
+    "drop": "DROP TABLE IF EXISTS course_item;",
+    "create": "CREATE TABLE course_item (id SMALLINT NOT NULL AUTO_INCREMENT, name VARCHAR(100) NOT NULL, PRIMARY KEY (id));",
+    "insert": "INSERT INTO course_item VALUES ?"
   },
   {
     "sourceTableName": "vwCertificateFormats",
@@ -210,23 +218,149 @@
   },
   {
     "sourceTableName": "tblHSECourses",
-    "isDone": true
+    "destinationTableName": "course",
+    "isDone": false,
+    "fields": [
+      {
+        "source": "ID",
+        "destination": "id"
+      },
+      {
+        "source": "CourseCode",
+        "destination": "code"
+      },
+      {
+        "source": "CourseName",
+        "destination": "name"
+      },
+      {
+        "source": "Front_ID",
+        "destination": "front_id_text"
+      },
+      {
+        "source": "Back_ID",
+        "destination": "back_id_text"
+      },
+      {
+        "source": "IDCard",
+        "destination": "id_card"
+      },
+      {
+        "source": "Duration",
+        "destination": "duration"
+      },
+      {
+        "source": "Validity",
+        "destination": "validity"
+      },
+      {
+        "source": "CertificateType",
+        "destination": "cert_type"
+      },
+      {
+        "source": "CertIDCard",
+        "destination": "cert_id_card"
+      },
+      {
+        "source": "opito_registration_code",
+        "destination": "opito_reg_code"
+      }
+    ],
+    "drop": "DROP TABLE IF EXISTS course;",
+    "create": "CREATE TABLE course (id SMALLINT NOT NULL AUTO_INCREMENT, code CHAR(3) NOT NULL, name VARCHAR(60), front_id VARCHAR(45), back_id VARCHAR(45), id_card TINYINT, duration TINYINT, validity TINYINT, cert_type TINYINT, cert_id_card TINYINT, opito_reg_code VARCHAR(4), PRIMARY KEY (id));",
+    "insert": "INSERT INTO course VALUES ?",
+    "index": "ALTER TABLE course ADD INDEX course_code_idx (code ASC) VISIBLE;"
   },
   {
     "sourceTableName": "tblNationalities",
-    "isDone": true
+    "destinationTableName": "nationality",
+    "isDone": false,
+    "fields": [
+      {
+        "source": "ID",
+        "destination": "id"
+      },
+      {
+        "source": "natcode",
+        "destination": "code"
+      },
+      {
+        "source": "natdesc",
+        "destination": "name"
+      }
+    ],
+    "drop": "DROP TABLE IF EXISTS nationality;",
+    "create": "CREATE TABLE nationality (id INT NOT NULL AUTO_INCREMENT, code SMALLINT NOT NULL, name VARCHAR(45) NOT NULL, PRIMARY KEY (id));",
+    "insert": "INSERT INTO nationality VALUES ?",
+    "index": "ALTER TABLE nationality ADD INDEX nationality_code_idx (code ASC) VISIBLE;"
   },
   {
     "sourceTableName": "tblOpitoGeneratedRecords",
-    "isDone": true
+    "destinationTableName": "opito",
+    "isDone": false,
+    "fields": [
+      {
+        "source": "record_id",
+        "destination": "id"
+      },
+      {
+        "source": "generated",
+        "destination": "created"
+      }
+    ],
+    "drop": "DROP TABLE IF EXISTS opito;",
+    "create": "CREATE TABLE opito (id INT NOT NULL, created DATETIME DEFAULT NOW(), PRIMARY KEY (id));",
+    "insert": "INSERT INTO opito VALUES ?"
   },
   {
     "sourceTableName": "tblPersonnel",
-    "isDone": true
-  },
-  {
-    "sourceTableName": "tblPositions",
-    "isDone": true
+    "destinationTableName": "delegate",
+    "isDone": false,
+    "fields": [
+      {
+        "source": "ID",
+        "destination": "id"
+      },
+      {
+        "source": "badgeno",
+        "destination": "badge"
+      },
+      {
+        "source": "surname",
+        "destination": "last_name"
+      },
+      {
+        "source": "firstname",
+        "destination": "first_name"
+      },
+      {
+        "source": "sex",
+        "destination": "sex"
+      },
+      {
+        "source": "StateID",
+        "destination": "state"
+      },
+      {
+        "source": "natcode",
+        "destination": "nationality"
+      },
+      {
+        "source": "bdate",
+        "destination": "birth_date"
+      },
+      {
+        "source": "agencode",
+        "destination": "company"
+      },
+      {
+        "source": "Active",
+        "destination": "status"
+      }
+    ],
+    "drop": "DROP TABLE IF EXISTS delegate;",
+    "create": "CREATE TABLE delegate (id INT NOT NULL AUTO_INCREMENT, badge VARCHAR(10) NOT NULL, last_name VARCHAR(45) NOT NULL, first_name VARCHAR(45) NOT NULL, sex CHAR(1) NOT NULL, state SMALLINT, nationality SMALLINT, birth_date DATETIME, company VARCHAR(6), status TINYINT NOT NULL, PRIMARY KEY (id));",
+    "insert": "INSERT INTO delegate VALUES ?"
   },
   {
     "sourceTableName": "tblSex",
