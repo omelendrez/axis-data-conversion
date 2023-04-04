@@ -1,0 +1,98 @@
+[
+  {
+    "destinationTableName": "status",
+    "isDone": true,
+    "drop": "DROP TABLE IF EXISTS status;",
+    "create": "CREATE TABLE status (id INT NOT NULL AUTO_INCREMENT, state VARCHAR(45) NOT NULL, status VARCHAR(45) NOT NULL, continue_flow TINYINT, PRIMARY KEY (id));",
+    "insert": "INSERT INTO status VALUES ?",
+    "records": [
+      [
+        2,
+        "Frond desk done",
+        "Waiting for Medic",
+        1
+      ],
+      [
+        3,
+        "Medic done",
+        "Waining for Training Coordinator",
+        1
+      ],
+      [
+        4,
+        "Training Coordinator done",
+        "Waiting for Assesment",
+        1
+      ],
+      [
+        5,
+        "Assesment done",
+        "Waining to QC",
+        1
+      ],
+      [
+        6,
+        "QC done",
+        "Waiting for MD",
+        1
+      ],
+      [
+        7,
+        "MD done",
+        "Wating for Printing",
+        1
+      ],
+      [
+        8,
+        "Printing done",
+        "Waiting for Opito Transfer Letter",
+        1
+      ],
+      [
+        9,
+        "Training Cancelled",
+        "Cancelled",
+        0
+      ],
+      [
+        10,
+        "Completed",
+        "Completed",
+        0
+      ],
+      [
+        1,
+        "Admin done",
+        "Waiting for Front desk",
+        1
+      ]
+    ]
+  },
+  {
+    "sourceTableName": "empTraining",
+    "destinationTableName": "training",
+    "isDone": false,
+    "isUpdate": true,
+    "fields": [
+      {
+        "source": "ID"
+      },
+      {
+        "source": "Certificate_printedBy",
+        "status": 10
+      },
+      {
+        "source": "Certificate_IssuedBy",
+        "status": 7
+      },
+      {
+        "source": "Certificate",
+        "status": 5
+      },
+      {
+        "source": "ApprovedBy",
+        "status": 1
+      }
+    ]
+  }
+]

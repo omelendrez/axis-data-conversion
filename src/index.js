@@ -1,8 +1,11 @@
 require('dotenv').config()
 const mssql = require('./mssql/mssql-connect')
 const mysql = require('./mysql/mysql-connect')
-const schemas = require('./mssql/schemas.json')
+const schemas = require('./schema/schemas.json')
+const filler = require('./schema/post-data-conversion-data.json')
+
 const data = require('./process/data-conversion')
+const post = require('./process/post-data-conversion')
 
 async function run() {
   try {
@@ -34,6 +37,7 @@ async function run() {
     let totalRecords = 0
     let processed = 0
     let tables = 0
+    let updatedRecords = 0
 
     await Promise.all(
       schemas
@@ -46,9 +50,29 @@ async function run() {
         })
     )
 
+    await Promise.all(
+      filler
+        .filter((t) => !t.isUpdate && !t.isDone)
+        .map(async (t) => {
+          const [inserted] = await post.execute(mySql, t)
+          processed += inserted
+          tables++
+        })
+    )
+
+    await Promise.all(
+      filler
+        .filter((t) => t.isUpdate && !t.isDone)
+        .map(async (t) => {
+          const [updated] = await post.updateTrainingStatus(sql, mySql, t)
+          updatedRecords += updated
+        })
+    )
+
     console.log('Total tables processed:', tables)
     console.log('Total records read from MSSQL:', totalRecords)
     console.log('Total records inserted to MySQL:', processed)
+    console.log('Total records updated MySQL:', updatedRecords)
     console.log()
     console.log('AXIS DATA CONVERSION: Completed')
 
