@@ -88,31 +88,3 @@ function addTracking(sql, mySql, t) {
 module.exports = { execute, updateTrainingStatus, addTracking }
 
 
-// select 'persons without any training' error, COUNT(1) records
-// from tblPersonnel
-// where ID not in (select EmpID from empTraining)
-
-// union
-
-// select 'persons that are subcontractors', COUNT(1)
-// from tblPersonnel where pertype='SUB'
-
-// union
-
-// select 'training records with wrong course', COUNT (1)
-// from empTraining
-// where CourseCode not in (select CourseCode from tblHSECourses)
-
-// union
-
-// select 'persons with wrong course code', COUNT (1)
-// from tblPersonnel
-// where ID in (select EmpID from empTraining where CourseCode not in (select CourseCode from tblHSECourses))
-
-// union
-
-// select 'persons without client (0000 *UNDEFINED*)', COUNT(1) from tblPersonnel where agencode='0000'
-
-// union
-
-// select 'persons without job title (000000 PENDING)', COUNT(1) from tblPersonnel where posicode= '000000'
