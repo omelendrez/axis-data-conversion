@@ -41,7 +41,10 @@ async function run() {
 
     await Promise.all(
       schemas
-        .filter((t) => !t.isDone)
+        .filter((t) =>
+          !t.isDone &&
+          !t.isInsert
+        )
         .map(async (t) => {
           const [read, inserted] = await data.convert(sql, mySql, t)
           totalRecords += read
@@ -52,7 +55,11 @@ async function run() {
 
     await Promise.all(
       filler
-        .filter((t) => !t.isUpdate && !t.isDone)
+        .filter((t) =>
+          !t.isDone &&
+          !t.isUpdate &&
+          !t.isInsert
+        )
         .map(async (t) => {
           const [inserted] = await post.execute(mySql, t)
           processed += inserted
@@ -62,10 +69,25 @@ async function run() {
 
     await Promise.all(
       filler
-        .filter((t) => t.isUpdate && !t.isDone)
+        .filter((t) =>
+          !t.isDone &&
+          t.isUpdate
+        )
         .map(async (t) => {
           const [updated] = await post.updateTrainingStatus(sql, mySql, t)
           updatedRecords += updated
+        })
+    )
+
+    await Promise.all(
+      filler
+        .filter((t) =>
+          !t.isDone &&
+          t.isInsert
+        )
+        .map(async (t) => {
+          const [inserted] = await post.addTracking(sql, mySql, t)
+          processed += inserted
         })
     )
 

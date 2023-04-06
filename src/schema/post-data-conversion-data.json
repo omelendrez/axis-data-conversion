@@ -3,7 +3,7 @@
     "destinationTableName": "status",
     "isDone": true,
     "drop": "DROP TABLE IF EXISTS status;",
-    "create": "CREATE TABLE status (id INT NOT NULL AUTO_INCREMENT, state VARCHAR(45) NOT NULL, status VARCHAR(45) NOT NULL, continue_flow TINYINT, PRIMARY KEY (id));",
+    "create": "CREATE TABLE status (id SMALLINT NOT NULL AUTO_INCREMENT, state VARCHAR(45) NOT NULL, status VARCHAR(45) NOT NULL, continue_flow TINYINT, PRIMARY KEY (id));",
     "insert": "INSERT INTO status VALUES ?",
     "records": [
       [
@@ -71,7 +71,7 @@
   {
     "sourceTableName": "empTraining",
     "destinationTableName": "training",
-    "isDone": false,
+    "isDone": true,
     "isUpdate": true,
     "fields": [
       {
@@ -80,6 +80,36 @@
       {
         "source": "Certificate_printedBy",
         "status": 10
+      },
+      {
+        "source": "Certificate_IssuedBy",
+        "status": 7
+      },
+      {
+        "source": "Certificate",
+        "status": 5
+      },
+      {
+        "source": "ApprovedBy",
+        "status": 1
+      }
+    ]
+  },
+  {
+    "sourceTableName": "empTraining",
+    "destinationTableName": "tracking",
+    "isDone": false,
+    "isInsert": true,
+    "drop": "DROP TABLE IF EXISTS tracking;",
+    "create": "CREATE TABLE tracking (id INT NOT NULL AUTO_INCREMENT, training INT,  status TINYINT NOT NULL, updated DATETIME, PRIMARY KEY (id));",
+    "insert": "INSERT INTO tracking VALUES ?",
+    "fields": [
+      {
+        "source": "ID"
+      },
+      {
+        "source": "Certificate_printedBy",
+        "status": 1
       },
       {
         "source": "Certificate_IssuedBy",
