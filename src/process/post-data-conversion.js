@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt')
+
 function execute(mySql, t) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -21,9 +23,9 @@ function execute(mySql, t) {
 
       resolve([r.affectedRows])
 
-    } catch (error) {
-      console.dir(error)
-      reject(error)
+    } catch (err) {
+      console.dir(err)
+      reject(err)
     }
   })
 }
@@ -54,8 +56,7 @@ function updateTrainingStatus(sql, mySql, t) {
             })
         })
       setTimeout(async () => {
-        await mySql.query("UPDATE training SET status=0 WHERE delegate NOT IN (select id FROM delegate WHERE status=1);")
-        console.log('here')
+        await mySql.query("UPDATE training SET status=10 WHERE delegate NOT IN (select id FROM delegate WHERE status=1);")
       })
       const bold = '\033[1;97m'
       const reset = '\033[0m'
@@ -70,21 +71,66 @@ function updateTrainingStatus(sql, mySql, t) {
       console.log()
 
       resolve([updatedRows])
-    } catch (error) {
-      console.dir(error)
-      reject(error)
+    } catch (err) {
+      console.dir(err)
+      reject(err)
     }
   })
 }
 
-function addTracking(sql, mySql, t) {
-  return new Promise((resolve, reject) => {
-    console.log(t)
-    resolve([123])
+function secureUserPasswords(mySql) {
+  return new Promise(async (resolve, reject) => {
+    const users = await mySql.query('SELECT id, decrypt(password) `password` from user')
+    users[0]
+      .filter((user) => user.password.length > 0)
+      .map(async (user) => {
+        if (user.password) {
+          const password = await bcrypt.hash(user.password.toLowerCase(), 10)
+          await mySql.query("UPDATE user SET password = ? WHERE id = ?", [password, user.id])
+        }
+        resolve()
+      })
   })
 }
 
+function addTracking(sql, mySql, t) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await mySql.query(t.drop)
+      await mySql.query(t.create)
+      await mySql.query(t.index)
+      const fields = t.fields
 
-module.exports = { execute, updateTrainingStatus, addTracking }
+      const queryFields = []
+
+      fields.forEach((f) => {
+        queryFields.push(f.date)
+        queryFields.push(f.user)
+      })
+
+      const query = `SELECT ID, ${queryFields.join(',')} FROM ${process.env.MSSQL_DATABASE}.dbo.${t.sourceTableName}`
+
+      const result = await sql.query(query)
+      const values = []
+      result.recordset.map((r) => {
+        fields.forEach(async (f) => {
+          if (r[f.date] && r[f.user]) {
+            values.push([r.ID, f.status, r[f.user], r[f.date]])
+          }
+        })
+      })
+
+      await mySql.query(t.insert, [values])
+
+      resolve([values.length])
+    }
+    catch (err) {
+      console.dir(err)
+      reject(err)
+    }
+  })
+}
+
+module.exports = { execute, updateTrainingStatus, addTracking, secureUserPasswords }
 
 

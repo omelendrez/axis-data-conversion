@@ -101,27 +101,24 @@
     "isDone": false,
     "isInsert": true,
     "drop": "DROP TABLE IF EXISTS tracking;",
-    "create": "CREATE TABLE tracking (id INT NOT NULL AUTO_INCREMENT, training INT,  status TINYINT NOT NULL, updated DATETIME, PRIMARY KEY (id));",
-    "insert": "INSERT INTO tracking VALUES ?",
+    "create": "CREATE TABLE tracking (id INT NOT NULL AUTO_INCREMENT, training INT,  status TINYINT NOT NULL, user INT, updated DATETIME, PRIMARY KEY (id));",
+    "index": "ALTER TABLE tracking ADD INDEX tracking_training_idx (training ASC) VISIBLE;",
+    "insert": "INSERT INTO tracking (training, status, user, updated) VALUES ?",
     "fields": [
       {
-        "source": "ID"
-      },
-      {
-        "source": "Certificate_printedBy",
-        "status": 1
-      },
-      {
-        "source": "Certificate_IssuedBy",
+        "date": "ApprovedOn",
+        "user": "ApprovedBy",
         "status": 7
       },
       {
-        "source": "Certificate",
-        "status": 5
+        "date": "Certificate_printedOn",
+        "user": "Certificate_printedBy",
+        "status": 8
       },
       {
-        "source": "ApprovedBy",
-        "status": 1
+        "date": "ID_printedOn",
+        "user": "ID_printedBy",
+        "status": 9
       }
     ]
   }

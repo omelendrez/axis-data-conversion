@@ -91,6 +91,8 @@ async function run() {
         })
     )
 
+    await post.secureUserPasswords(mySql)
+
     console.log('Total tables processed:', tables)
     console.log('Total records read from MSSQL:', totalRecords)
     console.log('Total records inserted to MySQL:', processed)
