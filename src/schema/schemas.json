@@ -319,7 +319,7 @@
   {
     "sourceTableName": "tblPersonnel",
     "destinationTableName": "delegate",
-    "isDone": true,
+    "isDone": false,
     "fields": [
       {
         "source": "ID",
@@ -368,7 +368,8 @@
     ],
     "drop": "DROP TABLE IF EXISTS delegate;",
     "create": "CREATE TABLE delegate (id INT NOT NULL AUTO_INCREMENT, type CHAR(3), badge VARCHAR(10) NOT NULL, last_name VARCHAR(45) NOT NULL, first_name VARCHAR(45) NOT NULL, sex CHAR(1) NOT NULL, state SMALLINT, nationality SMALLINT, birth_date DATETIME, company VARCHAR(6), status TINYINT NOT NULL, PRIMARY KEY (id));",
-    "insert": "INSERT INTO delegate VALUES ?"
+    "insert": "INSERT INTO delegate VALUES ?",
+    "index": "ALTER TABLE delegate ADD INDEX delegate_badge_idx (badge ASC) VISIBLE;"
   },
   {
     "sourceTableName": "tblSex",

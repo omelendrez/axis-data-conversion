@@ -122,7 +122,7 @@ function addTracking(sql, mySql, t) {
 
       await mySql.query(t.insert, [values])
 
-      resolve([values.length])
+      resolve([result.recordset.length, values.length])
     }
     catch (err) {
       console.dir(err)

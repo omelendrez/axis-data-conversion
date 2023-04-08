@@ -71,22 +71,11 @@ async function run() {
       filler
         .filter((t) =>
           !t.isDone &&
-          t.isUpdate
-        )
-        .map(async (t) => {
-          const [updated] = await post.updateTrainingStatus(sql, mySql, t)
-          updatedRecords += updated
-        })
-    )
-
-    await Promise.all(
-      filler
-        .filter((t) =>
-          !t.isDone &&
           t.isInsert
         )
         .map(async (t) => {
-          const [inserted] = await post.addTracking(sql, mySql, t)
+          const [read, inserted] = await post.addTracking(sql, mySql, t)
+          totalRecords += read
           processed += inserted
         })
     )
