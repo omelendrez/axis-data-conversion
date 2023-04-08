@@ -15,7 +15,8 @@ const connect = async () => {
       connectionLimit: 10,
       maxIdle: 10,
       idleTimeout: 60000,
-      queueLimit: 0
+      queueLimit: 0,
+      multipleStatements: true
     })
     connection.connect()
     return connection

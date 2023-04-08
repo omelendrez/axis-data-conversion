@@ -1,10 +1,18 @@
 const bcrypt = require('bcrypt')
+const { formatConsole } = require('../helpers')
 
 function execute(mySql, t) {
   return new Promise(async (resolve, reject) => {
     try {
-      await mySql.query(t.drop)
-      await mySql.query(t.create)
+      const actions = ['drop', 'create', 'index']
+      let statement = ''
+
+      actions.forEach((a) => {
+        statement += t[a] ? t[a] : ''
+      })
+
+      await mySql.query(statement)
+
       const records = t.records
 
       const [r] = await mySql.query(t.insert, [records])
@@ -58,10 +66,8 @@ function updateTrainingStatus(sql, mySql, t) {
       setTimeout(async () => {
         await mySql.query("UPDATE training SET status=10 WHERE delegate NOT IN (select id FROM delegate WHERE status=1);")
       })
-      const bold = '\033[1;97m'
-      const reset = '\033[0m'
 
-      console.log(bold + `  -> ${t.destinationTableName}` + reset)
+      console.log(formatConsole(t.destinationTableName))
 
       const summary = [
         { title: 'Updated MySQL records', records: updatedRows }
@@ -96,9 +102,15 @@ function secureUserPasswords(mySql) {
 function addTracking(sql, mySql, t) {
   return new Promise(async (resolve, reject) => {
     try {
-      await mySql.query(t.drop)
-      await mySql.query(t.create)
-      await mySql.query(t.index)
+      const actions = ['drop', 'create', 'index']
+      let statement = ''
+
+      actions.forEach((a) => {
+        statement += t[a] ? t[a] : ''
+      })
+
+      await mySql.query(statement)
+
       const fields = t.fields
 
       const queryFields = []
@@ -131,6 +143,33 @@ function addTracking(sql, mySql, t) {
   })
 }
 
-module.exports = { execute, updateTrainingStatus, addTracking, secureUserPasswords }
+function executeProcedure(mySql, t) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const statements = t.steps((s) => s.step)
+
+      const result = await mySql.query(statements.join(''))
+
+      const updatedRows = result[0].affectedRows
+
+      const summary = [
+        { title: t.title, records: updatedRows }
+      ]
+
+      const transformed = summary.reduce((acc, { title, ...rest }) => { acc[title] = rest; return acc }, {})
+
+      console.table(transformed)
+      console.log(result)
+
+      resolve([updatedRows])
+    }
+    catch (err) {
+      console.dir(err)
+      reject(err)
+    }
+  })
+}
+
+module.exports = { execute, updateTrainingStatus, addTracking, secureUserPasswords, executeProcedure }
 
 

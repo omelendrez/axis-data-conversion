@@ -5,11 +5,14 @@ function convert(sql, mySql, t) {
       const query = `SELECT ${fields} FROM ${process.env.MSSQL_DATABASE}.dbo.${t.sourceTableName}`
       const result = await sql.query(query)
 
-      await mySql.query(t.drop)
-      await mySql.query(t.create)
-      if (t.index) {
-        await mySql.query(t.index)
-      }
+      const actions = ['drop', 'create', 'index']
+      let statement = ''
+
+      actions.forEach((a) => {
+        statement += t[a] ? t[a] : ''
+      })
+
+      await mySql.query(statement)
 
       const records = []
 

@@ -80,6 +80,18 @@ async function run() {
         })
     )
 
+    await Promise.all(
+      filler
+        .filter((t) =>
+          !t.isDone &&
+          t.isUpdate
+        )
+        .map(async (t) => {
+          const [inserted] = await post.executeProcedure(mySql, t)
+          processed += inserted
+        })
+    )
+
     await post.secureUserPasswords(mySql)
 
     console.log('Total tables processed:', tables)
