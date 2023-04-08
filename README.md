@@ -8,7 +8,7 @@ You should have MySQL Server 8.0 Community version installed in the server.
 
 If MySQL is not installed you should install it from https://dev.mysql.com/downloads/windows/installer/8.0.html
 
-You should have Nodejs verion 16 or highr installed in the server.
+You should have Nodejs version 16 or higher installed in the server.
 
 If Nodejs is not installed you should install version 18.15.0 from https://nodejs.org/en
 
