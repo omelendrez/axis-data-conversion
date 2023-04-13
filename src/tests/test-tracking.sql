@@ -18,7 +18,7 @@ from
   inner join course c on t.course = c.code
   inner join user u on k.user = u.id
 where
-  t.delegate = 728418
+  t.learner = 728418
   and t.course = 146
 order by
   k.updated;

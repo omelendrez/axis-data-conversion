@@ -30,7 +30,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS user;",
-    "create": "DROP TABLE IF EXISTS user;CREATE TABLE user (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(45) NOT NULL, full_name VARCHAR(45), password VARCHAR(60), email VARCHAR(45), status TINYINT NOT NULL, PRIMARY KEY (id));",
+    "create": "CREATE TABLE user (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(45) NOT NULL, full_name VARCHAR(45), password VARCHAR(60), email VARCHAR(45), status TINYINT NOT NULL, PRIMARY KEY (id));",
     "insert": "INSERT INTO user VALUES ?"
   },
   {
@@ -62,7 +62,7 @@
       },
       {
         "source": "EmpID",
-        "destination": "delegate"
+        "destination": "learner"
       },
       {
         "source": "ContactType",
@@ -71,13 +71,13 @@
       {
         "source": "ContactValue",
         "destination": "value",
-        "lowercase": false
+        "lowercase": true
       }
     ],
     "drop": "DROP TABLE IF EXISTS contact_info;",
-    "create": "CREATE TABLE contact_info (id INT NOT NULL AUTO_INCREMENT, delegate INT NOT NULL, type SMALLINT NOT NULL, value VARCHAR(60), PRIMARY KEY (id));",
+    "create": "CREATE TABLE contact_info (id INT NOT NULL AUTO_INCREMENT, learner INT NOT NULL, type SMALLINT NOT NULL, value VARCHAR(60), PRIMARY KEY (id));",
     "insert": "INSERT INTO contact_info VALUES ?",
-    "index": "ALTER TABLE contact_info ADD INDEX contact_info_delegate_idx (delegate ASC) VISIBLE;"
+    "index": "ALTER TABLE contact_info ADD INDEX contact_info_delegate_idx (learner ASC) VISIBLE;"
   },
   {
     "sourceTableName": "empTraining",
@@ -90,7 +90,7 @@
       },
       {
         "source": "EmpID",
-        "destination": "delegate"
+        "destination": "learner"
       },
       {
         "source": "CourseCode",
@@ -114,7 +114,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS training;",
-    "create": "CREATE TABLE training (id INT NOT NULL AUTO_INCREMENT, delegate INT NOT NULL, course CHAR(6) NOT NULL, start DATETIME NOT NULL, expiry DATETIME, certificate VARCHAR(30), status TINYINT, PRIMARY KEY (id));",
+    "create": "CREATE TABLE training (id INT NOT NULL AUTO_INCREMENT, learner INT NOT NULL, course CHAR(6) NOT NULL, start DATETIME NOT NULL, expiry DATETIME, certificate VARCHAR(30), status TINYINT, PRIMARY KEY (id));",
     "insert": "INSERT INTO training VALUES ?"
   },
   {
@@ -318,7 +318,7 @@
   },
   {
     "sourceTableName": "tblPersonnel",
-    "destinationTableName": "delegate",
+    "destinationTableName": "learner",
     "isDone": false,
     "fields": [
       {
@@ -366,10 +366,10 @@
         "destination": "status"
       }
     ],
-    "drop": "DROP TABLE IF EXISTS delegate;",
-    "create": "CREATE TABLE delegate (id INT NOT NULL AUTO_INCREMENT, type CHAR(3), badge VARCHAR(10) NOT NULL, last_name VARCHAR(45) NOT NULL, first_name VARCHAR(45) NOT NULL, sex CHAR(1) NOT NULL, state SMALLINT, nationality SMALLINT, birth_date DATETIME, company VARCHAR(6), status TINYINT NOT NULL, PRIMARY KEY (id));",
-    "insert": "INSERT INTO delegate VALUES ?",
-    "index": "ALTER TABLE delegate ADD INDEX delegate_badge_idx (badge ASC) VISIBLE;"
+    "drop": "DROP TABLE IF EXISTS learner;",
+    "create": "CREATE TABLE learner (id INT NOT NULL AUTO_INCREMENT, type CHAR(3), badge VARCHAR(10) NOT NULL, last_name VARCHAR(45) NOT NULL, first_name VARCHAR(45) NOT NULL, sex CHAR(1) NOT NULL, state SMALLINT, nationality SMALLINT, birth_date DATETIME, company VARCHAR(6), status TINYINT NOT NULL, PRIMARY KEY (id));",
+    "insert": "INSERT INTO learner VALUES ?",
+    "index": "ALTER TABLE learner ADD INDEX delegate_badge_idx (badge ASC) VISIBLE;"
   },
   {
     "sourceTableName": "tblSex",

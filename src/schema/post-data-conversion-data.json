@@ -103,28 +103,10 @@
   },
   {
     "title": "Updating tracking",
+    "isDone": false,
     "isUpdate": true,
-    "steps": [
-      {
-        "sortOrder": 1,
-        "step": "drop table if exists tracking2;"
-      },
-      {
-        "sortOrder": 2,
-        "step": "create table tracking2 as ( select training, status, user, updated from tracking t where updated=(select max(updated) from tracking t2 where t2.training=t.training));"
-      },
-      {
-        "sortOrder": 3,
-        "step": "update training t inner join tracking2 t2 on t2.training=t.id set t.status=t2.status,user=t2.user,updated=t2.updated;"
-      },
-      {
-        "sortOrder": 3,
-        "step": "drop table if exists tracking2;"
-      },
-      {
-        "sortOrder": 4,
-        "step": "update training  set status=10 where id in (select id from opito);"
-      }
-    ]
+    "spCreate": "DROP PROCEDURE IF EXISTS update_tracking; CREATE DEFINER=root@localhost PROCEDURE update_tracking() BEGIN drop table if exists tracking2; create table tracking2 as ( select training, status, user, updated from tracking t where updated = (select max(updated) from tracking t2 where t2.training = t.training)); update training t inner join tracking2 t2 on t2.training = t.id set t.status = t2.status,user = t2.user, updated = t2.updated; drop table if exists tracking2;  update training  set status = 10 where id in (select id from opito); END;",
+    "spExecute": "call update_tracking();",
+    "spDrop": "DROP PROCEDURE IF EXISTS update_tracking;"
   }
 ]

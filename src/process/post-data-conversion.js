@@ -64,7 +64,7 @@ function updateTrainingStatus(sql, mySql, t) {
             })
         })
       setTimeout(async () => {
-        await mySql.query("UPDATE training SET status=10 WHERE delegate NOT IN (select id FROM delegate WHERE status=1);")
+        await mySql.query("UPDATE training SET status=10 WHERE learner NOT IN (select id FROM learner WHERE status=1);")
       })
 
       console.log(formatConsole(t.destinationTableName))
@@ -146,11 +146,14 @@ function addTracking(sql, mySql, t) {
 function executeProcedure(mySql, t) {
   return new Promise(async (resolve, reject) => {
     try {
-      const statements = t.steps((s) => s.step)
 
-      const result = await mySql.query(statements.join(''))
+      await mySql.query(t.spCreate)
+
+      const result = await mySql.query(t.spExecute)
 
       const updatedRows = result[0].affectedRows
+
+      await mySql.query(t.spDrop)
 
       const summary = [
         { title: t.title, records: updatedRows }
@@ -159,7 +162,6 @@ function executeProcedure(mySql, t) {
       const transformed = summary.reduce((acc, { title, ...rest }) => { acc[title] = rest; return acc }, {})
 
       console.table(transformed)
-      console.log(result)
 
       resolve([updatedRows])
     }
