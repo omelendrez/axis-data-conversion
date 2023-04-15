@@ -105,8 +105,15 @@
     "title": "Updating tracking",
     "isDone": false,
     "isUpdate": true,
-    "spCreate": "DROP PROCEDURE IF EXISTS update_tracking; CREATE DEFINER=root@localhost PROCEDURE update_tracking() BEGIN drop table if exists tracking2; create table tracking2 as ( select training, status, user, updated from tracking t where updated = (select max(updated) from tracking t2 where t2.training = t.training)); update training t inner join tracking2 t2 on t2.training = t.id set t.status = t2.status,user = t2.user, updated = t2.updated; drop table if exists tracking2;  update training  set status = 10 where id in (select id from opito); END;",
-    "spExecute": "call update_tracking();",
-    "spDrop": "DROP PROCEDURE IF EXISTS update_tracking;"
+    "update": "CREATE TABLE IF NOT EXISTS tracking2 AS (select training, status, user, updated FROM tracking t WHERE updated=(SELECT MAX(updated) FROM tracking t2 WHERE t2.training=t.training));UPDATE training t INNER JOIN tracking2 t2 on t2.training=t.id SET t.status=t2.status, user=t2.user, updated=t2.updated;UPDATE training SET status=10 WHERE id IN (SELECT id FROM opito);"
+  },
+  {
+    "title": "Secure passwords",
+    "isDone": false,
+    "isSecure": true,
+    "fnCreate": "CREATE FUNCTION IF NOT EXISTS decrypt (crypted CHAR(100)) RETURNS CHAR(100) DETERMINISTIC BEGIN DECLARE pos DECIMAL DEFAULT 1;DECLARE pwd CHAR(100) DEFAULT '';WHILE pos <= LENGTH(crypted) DO SET pwd = CONCAT(pwd,CHAR(CONVERT(substring(crypted, pos, 3), DECIMAL)));SET pos = pos+3;END WHILE;return LOWER(pwd);END;",
+    "query": "SELECT id, decrypt(password) password FROM user WHERE LENGTH(TRIM(password))>0;",
+    "update": "UPDATE user SET password = ? WHERE id = ?",
+    "fnDrop": "DROP FUNCTION IF EXISTS decrypt;"
   }
 ]

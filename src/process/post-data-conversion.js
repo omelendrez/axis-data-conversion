@@ -1,7 +1,9 @@
 const bcrypt = require('bcrypt')
+const mysql = require('../mysql/mysql-connect')
+
 const { formatConsole } = require('../helpers')
 
-function execute(mySql, t) {
+const execute = (mySql, t) => {
   return new Promise(async (resolve, reject) => {
     try {
       const actions = ['drop', 'create', 'index']
@@ -16,10 +18,8 @@ function execute(mySql, t) {
       const records = t.records
 
       const [r] = await mySql.query(t.insert, [records])
-      const bold = '\033[1;97m'
-      const reset = '\033[0m'
 
-      console.log(bold + `  -> ${t.destinationTableName}` + reset)
+      console.log(formatConsole(t.destinationTableName))
 
       const summary = [
         { title: 'Read from MSSQL', records: 0 },
@@ -38,7 +38,7 @@ function execute(mySql, t) {
   })
 }
 
-function updateTrainingStatus(sql, mySql, t) {
+const updateTrainingStatus = (sql, mySql, t) => {
   return new Promise(async (resolve, reject) => {
     try {
       const fields = t.fields
@@ -57,15 +57,15 @@ function updateTrainingStatus(sql, mySql, t) {
             .forEach(async (f) => {
               if (!found && f.status && r[f.source]) {
                 const status = f.status
+                const id = r['ID']
                 found = true
-                const query = `UPDATE ${t.destinationTableName} SET status=${status} WHERE id=${r['ID']}`
+                const query = `UPDATE ${t.destinationTableName} SET status=${status} WHERE id=${id}`
                 await mySql.query(query)
               }
             })
         })
-      setTimeout(async () => {
-        await mySql.query("UPDATE training SET status=10 WHERE learner NOT IN (select id FROM learner WHERE status=1);")
-      })
+
+      await mySql.query("UPDATE training SET status=11 WHERE learner NOT IN (select id FROM learner WHERE status=1);")
 
       console.log(formatConsole(t.destinationTableName))
 
@@ -84,26 +84,49 @@ function updateTrainingStatus(sql, mySql, t) {
   })
 }
 
-function secureUserPasswords(mySql) {
+const secureUserPasswords = (mySql, t) => {
   return new Promise(async (resolve, reject) => {
-    const users = await mySql.query('SELECT id, decrypt(password) `password` from user')
-    users[0]
-      .filter((user) => user.password.length > 0)
-      .map(async (user) => {
-        if (user.password) {
+
+    try {
+
+      await mySql.query(t.fnCreate)
+
+      let updated = 0
+
+      console.log(formatConsole(t.title))
+
+      const [passwords] = await mySql.query(t.query)
+      updated = passwords.length
+
+      await passwords
+        .forEach(async (user) => {
           const password = await bcrypt.hash(user.password.toLowerCase(), 10)
-          await mySql.query("UPDATE user SET password = ? WHERE id = ?", [password, user.id])
-        }
-        resolve()
-      })
+          await mySql.query(t.update, [password, user.id])
+        })
+
+      const summary = [
+        { title: 'Updated user passwords', records: updated }
+      ]
+      const transformed = summary.reduce((acc, { title, ...rest }) => { acc[title] = rest; return acc }, {})
+      console.table(transformed)
+      console.log()
+
+      resolve([updated])
+
+    } catch (error) {
+      console.dir(error)
+      reject(error)
+    }
   })
 }
 
-function addTracking(sql, mySql, t) {
+const addTracking = (sql, mySql, t) => {
   return new Promise(async (resolve, reject) => {
     try {
       const actions = ['drop', 'create', 'index']
       let statement = ''
+
+      console.log(formatConsole('tracking'))
 
       actions.forEach((a) => {
         statement += t[a] ? t[a] : ''
@@ -124,7 +147,7 @@ function addTracking(sql, mySql, t) {
 
       const result = await sql.query(query)
       const values = []
-      result.recordset.map((r) => {
+      result.recordset.forEach((r) => {
         fields.forEach(async (f) => {
           if (r[f.date] && r[f.user]) {
             values.push([r.ID, f.status, r[f.user], r[f.date]])
@@ -132,9 +155,17 @@ function addTracking(sql, mySql, t) {
         })
       })
 
-      await mySql.query(t.insert, [values])
+      const result2 = await mySql.query(t.insert, [values])
+      const updatedRows = result2[0].affectedRows
 
-      resolve([result.recordset.length, values.length])
+      const summary = [
+        { title: 'Generated MySQL records', records: updatedRows }
+      ]
+      const transformed = summary.reduce((acc, { title, ...rest }) => { acc[title] = rest; return acc }, {})
+      console.table(transformed)
+      console.log()
+
+      resolve([result.recordset.length, updatedRows])
     }
     catch (err) {
       console.dir(err)
@@ -143,17 +174,18 @@ function addTracking(sql, mySql, t) {
   })
 }
 
-function executeProcedure(mySql, t) {
+const executeProcedure = async (t) => {
+  const mySql = await mysql.connect()
+  const db = process.env.MYSQL_DATABASE || 'axis'
+  await mySql.query(`USE ${db};`)
+
   return new Promise(async (resolve, reject) => {
     try {
 
-      await mySql.query(t.spCreate)
+      console.log(formatConsole(t.title))
 
-      const result = await mySql.query(t.spExecute)
-
-      const updatedRows = result[0].affectedRows
-
-      await mySql.query(t.spDrop)
+      const [res] = await mySql.query(t.update)
+      const updatedRows = res[1].affectedRows
 
       const summary = [
         { title: t.title, records: updatedRows }
@@ -162,8 +194,10 @@ function executeProcedure(mySql, t) {
       const transformed = summary.reduce((acc, { title, ...rest }) => { acc[title] = rest; return acc }, {})
 
       console.table(transformed)
+      console.log()
 
       resolve([updatedRows])
+
     }
     catch (err) {
       console.dir(err)

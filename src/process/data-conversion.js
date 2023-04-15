@@ -1,3 +1,5 @@
+const { formatConsole } = require('../helpers')
+
 function convert(sql, mySql, t) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -24,10 +26,8 @@ function convert(sql, mySql, t) {
         records.push(record)
       })
       const [r] = await mySql.query(t.insert, [records])
-      const bold = '\033[1;97m'
-      const reset = '\033[0m'
 
-      console.log(bold + `${t.sourceTableName} -> ${t.destinationTableName}` + reset)
+      console.log(formatConsole(`${t.sourceTableName} -> ${t.destinationTableName}`))
 
       const summary = [
         { title: 'Read from MSSQL', records: result.recordset.length },

@@ -25,9 +25,6 @@ async function run() {
 
     const db = process.env.MYSQL_DATABASE || 'axis'
 
-    console.log('Creating MySQL database if not exists')
-    console.log()
-
     await mySql.query(`CREATE DATABASE IF NOT EXISTS ${db};`)
     await mySql.query(`USE ${db};`)
 
@@ -57,12 +54,11 @@ async function run() {
       filler
         .filter((t) =>
           !t.isDone &&
-          !t.isUpdate &&
-          !t.isInsert
+          t.isSecure
         )
         .map(async (t) => {
-          const [inserted] = await post.execute(mySql, t)
-          processed += inserted
+          const [updated] = await post.secureUserPasswords(mySql, t)
+          processed += updated
           tables++
         })
     )
@@ -84,15 +80,28 @@ async function run() {
       filler
         .filter((t) =>
           !t.isDone &&
-          t.isUpdate
+          !t.isUpdate &&
+          !t.isInsert &&
+          !t.isSecure
         )
         .map(async (t) => {
-          const [inserted] = await post.executeProcedure(mySql, t)
+          const [inserted] = await post.execute(mySql, t)
           processed += inserted
+          tables++
         })
     )
 
-    await post.secureUserPasswords(mySql)
+    await Promise.all(
+      filler
+        .filter((t) =>
+          !t.isDone &&
+          t.isUpdate
+        )
+        .map(async (t) => {
+          const [inserted] = await post.executeProcedure(t)
+          processed += inserted
+        })
+    )
 
     console.log('Total tables processed:', tables)
     console.log('Total records read from MSSQL:', totalRecords)
@@ -101,10 +110,14 @@ async function run() {
     console.log()
     console.log('AXIS DATA CONVERSION: Completed')
 
+    mySql.destroy()
+
     setTimeout(() => process.exit(), 1000)
 
   } catch (err) {
     console.dir(err)
+    mySql.destroy()
+    setTimeout(() => process.exit(), 1000)
   }
 }
 
