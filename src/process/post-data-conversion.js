@@ -1,11 +1,18 @@
-const bcrypt = require('bcrypt')
+const mssql = require('../mssql/mssql-connect')
 const mysql = require('../mysql/mysql-connect')
+const bcrypt = require('bcrypt')
 
 const { formatConsole } = require('../helpers')
 
-const execute = (mySql, t) => {
+const execute = (t) => {
   return new Promise(async (resolve, reject) => {
+
+    const mySql = await mysql.connect()
+
     try {
+      const db = process.env.MYSQL_DATABASE || 'axis'
+      await mySql.query(`USE ${db};`)
+
       const actions = ['drop', 'create', 'index']
       let statement = ''
 
@@ -34,13 +41,23 @@ const execute = (mySql, t) => {
     } catch (err) {
       console.dir(err)
       reject(err)
+    } finally {
+      mySql.end()
     }
   })
 }
 
-const updateTrainingStatus = (sql, mySql, t) => {
+const updateTrainingStatus = (t) => {
   return new Promise(async (resolve, reject) => {
+
+    const mySql = await mysql.connect()
+
     try {
+      const sql = await mssql.connect()
+
+      const db = process.env.MYSQL_DATABASE || 'axis'
+      await mySql.query(`USE ${db};`)
+
       const fields = t.fields
         .map((f) => f.source)
         .join(',')
@@ -80,20 +97,26 @@ const updateTrainingStatus = (sql, mySql, t) => {
     } catch (err) {
       console.dir(err)
       reject(err)
+    } finally {
+      mySql.end()
     }
   })
 }
 
-const secureUserPasswords = (mySql, t) => {
-  return new Promise(async (resolve, reject) => {
+const secureUserPasswords = async (t) => {
+  return await new Promise(async (resolve, reject) => {
+    const mySql = await mysql.connect()
 
     try {
 
-      await mySql.query(t.fnCreate)
+      const db = process.env.MYSQL_DATABASE || 'axis'
+      await mySql.query(`USE ${db};`)
+
+      console.log(formatConsole(t.title))
 
       let updated = 0
 
-      console.log(formatConsole(t.title))
+      await mySql.query(t.fnCreate)
 
       const [passwords] = await mySql.query(t.query)
       updated = passwords.length
@@ -103,6 +126,8 @@ const secureUserPasswords = (mySql, t) => {
           const password = await bcrypt.hash(user.password.toLowerCase(), 10)
           await mySql.query(t.update, [password, user.id])
         })
+
+      await mySql.query(t.fnDrop)
 
       const summary = [
         { title: 'Updated user passwords', records: updated }
@@ -116,13 +141,23 @@ const secureUserPasswords = (mySql, t) => {
     } catch (error) {
       console.dir(error)
       reject(error)
+    } finally {
+      // mySql.end()
     }
+
   })
 }
 
-const addTracking = (sql, mySql, t) => {
+const addTracking = (t) => {
   return new Promise(async (resolve, reject) => {
+    const mySql = await mysql.connect()
+
     try {
+      const sql = await mssql.connect()
+
+      const db = process.env.MYSQL_DATABASE || 'axis'
+      await mySql.query(`USE ${db};`)
+
       const actions = ['drop', 'create', 'index']
       let statement = ''
 
@@ -170,22 +205,32 @@ const addTracking = (sql, mySql, t) => {
     catch (err) {
       console.dir(err)
       reject(err)
+    } finally {
+      mySql.end()
     }
+
   })
 }
 
 const executeProcedure = async (t) => {
-  const mySql = await mysql.connect()
-  const db = process.env.MYSQL_DATABASE || 'axis'
-  await mySql.query(`USE ${db};`)
-
   return new Promise(async (resolve, reject) => {
+    const mySql = await mysql.connect()
+
     try {
+      const db = process.env.MYSQL_DATABASE || 'axis'
+      await mySql.query(`USE ${db};`)
 
       console.log(formatConsole(t.title))
 
-      const [res] = await mySql.query(t.update)
-      const updatedRows = res[1].affectedRows
+      let updatedRows = 0
+
+      await Promise.all(
+        t.steps
+          .map(async (s) => {
+            const [res] = await mySql.query(s)
+            updatedRows += res.affectedRows
+          })
+      )
 
       const summary = [
         { title: t.title, records: updatedRows }
@@ -202,6 +247,8 @@ const executeProcedure = async (t) => {
     catch (err) {
       console.dir(err)
       reject(err)
+    } finally {
+      mySql.end()
     }
   })
 }

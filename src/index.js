@@ -1,6 +1,4 @@
 require('dotenv').config()
-const mssql = require('./mssql/mssql-connect')
-const mysql = require('./mysql/mysql-connect')
 const schemas = require('./schema/schemas.json')
 const filler = require('./schema/post-data-conversion-data.json')
 
@@ -13,24 +11,6 @@ async function run() {
     console.log('AXIS DATA CONVERSION: Starting')
     console.log()
 
-    console.log('Connecting to MSSQL')
-    console.log()
-
-    const sql = await mssql.connect()
-
-    console.log('Connecting to MySQL')
-    console.log()
-
-    const mySql = await mysql.connect()
-
-    const db = process.env.MYSQL_DATABASE || 'axis'
-
-    await mySql.query(`CREATE DATABASE IF NOT EXISTS ${db};`)
-    await mySql.query(`USE ${db};`)
-
-    console.log('Migration started:')
-    console.log()
-
     let totalRecords = 0
     let processed = 0
     let tables = 0
@@ -38,12 +18,9 @@ async function run() {
 
     await Promise.all(
       schemas
-        .filter((t) =>
-          !t.isDone &&
-          !t.isInsert
-        )
+        .filter((t) => !t.isDone)
         .map(async (t) => {
-          const [read, inserted] = await data.convert(sql, mySql, t)
+          const [read, inserted] = await data.convert(t)
           totalRecords += read
           processed += inserted
           tables++
@@ -52,12 +29,9 @@ async function run() {
 
     await Promise.all(
       filler
-        .filter((t) =>
-          !t.isDone &&
-          t.isSecure
-        )
+        .filter((t) => !t.isDone && t.isSecure)
         .map(async (t) => {
-          const [updated] = await post.secureUserPasswords(mySql, t)
+          const [updated] = await post.secureUserPasswords(t)
           processed += updated
           tables++
         })
@@ -65,12 +39,9 @@ async function run() {
 
     await Promise.all(
       filler
-        .filter((t) =>
-          !t.isDone &&
-          t.isInsert
-        )
+        .filter((t) => !t.isDone && t.isInsert)
         .map(async (t) => {
-          const [read, inserted] = await post.addTracking(sql, mySql, t)
+          const [read, inserted] = await post.addTracking(t)
           totalRecords += read
           processed += inserted
         })
@@ -78,14 +49,9 @@ async function run() {
 
     await Promise.all(
       filler
-        .filter((t) =>
-          !t.isDone &&
-          !t.isUpdate &&
-          !t.isInsert &&
-          !t.isSecure
-        )
+        .filter((t) => !t.isDone && !t.isUpdate && !t.isInsert && !t.isSecure)
         .map(async (t) => {
-          const [inserted] = await post.execute(mySql, t)
+          const [inserted] = await post.execute(t)
           processed += inserted
           tables++
         })
@@ -93,10 +59,7 @@ async function run() {
 
     await Promise.all(
       filler
-        .filter((t) =>
-          !t.isDone &&
-          t.isUpdate
-        )
+        .filter((t) => !t.isDone && t.isUpdate)
         .map(async (t) => {
           const [inserted] = await post.executeProcedure(t)
           processed += inserted
@@ -110,13 +73,10 @@ async function run() {
     console.log()
     console.log('AXIS DATA CONVERSION: Completed')
 
-    mySql.destroy()
-
     setTimeout(() => process.exit(), 1000)
 
   } catch (err) {
     console.dir(err)
-    mySql.destroy()
     setTimeout(() => process.exit(), 1000)
   }
 }

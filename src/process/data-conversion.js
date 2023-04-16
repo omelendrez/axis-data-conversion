@@ -1,8 +1,19 @@
+const mssql = require('../mssql/mssql-connect')
+const mysql = require('../mysql/mysql-connect')
+
 const { formatConsole } = require('../helpers')
 
-function convert(sql, mySql, t) {
+function convert(t) {
   return new Promise(async (resolve, reject) => {
+    const mySql = await mysql.connect()
     try {
+      const sql = await mssql.connect()
+
+      const db = process.env.MYSQL_DATABASE || 'axis'
+
+      await mySql.query(`CREATE DATABASE IF NOT EXISTS ${db};`)
+      await mySql.query(`USE ${db};`)
+
       const fields = t.fields.map((f) => f.source).join(',')
       const query = `SELECT ${fields} FROM ${process.env.MSSQL_DATABASE}.dbo.${t.sourceTableName}`
       const result = await sql.query(query)
@@ -43,6 +54,8 @@ function convert(sql, mySql, t) {
     } catch (error) {
       console.dir(error)
       reject(error)
+    } finally {
+      mySql.end()
     }
   })
 }
