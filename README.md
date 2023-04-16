@@ -107,11 +107,6 @@ npm start
 The app will show in the terminal the process step by step.
 If everything concludes without errors, you should see the last message as follows:
 
-```bash
-Total records read from MSSQL: 123456
-Total records inserted to MySQL: 123456
-
-AXIS DATA CONVERSION: Completed
-```
+![Screenshot 2023-04-16 120631](https://user-images.githubusercontent.com/7883563/232322085-7a763c9f-b128-46af-9fef-e545b4fcdadd.png)
 
 If this is the case, the new version of axis database has already been migrated to MySQL server.
