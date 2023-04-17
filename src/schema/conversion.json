@@ -102,7 +102,15 @@
     ]
   },
   {
-    "title": "Updating tracking",
+    "title": "Updated trainee companies",
+    "isDone": false,
+    "isUpdate": true,
+    "steps": [
+      "UPDATE trainee SET company='0000' WHERE company NOT IN (SELECT code FROM company);"
+    ]
+  },
+  {
+    "title": "Updated training trackings",
     "isDone": false,
     "isUpdate": true,
     "steps": [

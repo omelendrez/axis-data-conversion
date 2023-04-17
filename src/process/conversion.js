@@ -82,7 +82,7 @@ const updateTrainingStatus = (t) => {
             })
         })
 
-      await mySql.query("UPDATE training SET status=11 WHERE learner NOT IN (select id FROM learner WHERE status=1);")
+      await mySql.query("UPDATE training SET status=11 WHERE trainee NOT IN (select id FROM trainee WHERE status=1);")
 
       console.log(formatConsole(t.destinationTableName))
 
@@ -219,8 +219,6 @@ const executeProcedure = async (t) => {
     try {
       const db = process.env.MYSQL_DATABASE || 'axis'
       await mySql.query(`USE ${db};`)
-
-      console.log(formatConsole(t.title))
 
       let updatedRows = 0
 
