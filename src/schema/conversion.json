@@ -3,7 +3,7 @@
     "destinationTableName": "status",
     "isDone": false,
     "drop": "DROP TABLE IF EXISTS status;",
-    "create": "CREATE TABLE status (id SMALLINT NOT NULL AUTO_INCREMENT, state VARCHAR(45) NOT NULL, status VARCHAR(45) NOT NULL, continue_flow TINYINT, PRIMARY KEY (id));",
+    "create": "CREATE TABLE status (id TINYINT NOT NULL AUTO_INCREMENT, state VARCHAR(45) NOT NULL, status VARCHAR(45) NOT NULL, continue_flow TINYINT, PRIMARY KEY (id));",
     "insert": "INSERT INTO status VALUES ?",
     "records": [
       [
@@ -80,7 +80,7 @@
     "isDone": false,
     "isInsert": true,
     "drop": "DROP TABLE IF EXISTS tracking;",
-    "create": "CREATE TABLE tracking (id INT NOT NULL AUTO_INCREMENT, training INT,  status TINYINT NOT NULL, user INT, updated DATETIME, PRIMARY KEY (id));",
+    "create": "CREATE TABLE tracking (id INT NOT NULL AUTO_INCREMENT, training INT, status TINYINT NOT NULL, user SMALLINT, updated DATETIME, PRIMARY KEY (id));",
     "index": "ALTER TABLE tracking ADD INDEX tracking_training_idx (training ASC) VISIBLE;ALTER TABLE tracking ADD INDEX tracking_updated_idx (updated ASC) VISIBLE;",
     "insert": "INSERT INTO tracking (training, status, user, updated) VALUES ?",
     "fields": [
