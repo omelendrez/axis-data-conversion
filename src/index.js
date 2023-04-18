@@ -81,7 +81,9 @@ async function run() {
   }
 }
 
-process.stdin.setRawMode(true)
+if (process.stdin.isTTY) {
+  process.stdin.setRawMode(true)
+}
 process.stdin.resume()
 process.stdin.on('data', process.exit.bind(process, 0))
 
