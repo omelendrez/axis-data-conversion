@@ -2,7 +2,7 @@
   {
     "sourceTableName": "admUsers",
     "destinationTableName": "user",
-    "isDone": false,
+    "isDone": true,
     "fields": [
       {
         "source": "UserID",
@@ -36,7 +36,7 @@
   {
     "sourceTableName": "tblContactType",
     "destinationTableName": "contact_type",
-    "isDone": false,
+    "isDone": true,
     "fields": [
       {
         "source": "ID",
@@ -54,7 +54,7 @@
   {
     "sourceTableName": "empContactInfo",
     "destinationTableName": "contact_info",
-    "isDone": false,
+    "isDone": true,
     "fields": [
       {
         "source": "ID",
@@ -82,7 +82,7 @@
   {
     "sourceTableName": "tblStates",
     "destinationTableName": "state",
-    "isDone": false,
+    "isDone": true,
     "fields": [
       {
         "source": "StateID",
@@ -100,7 +100,7 @@
   {
     "sourceTableName": "empTraining",
     "destinationTableName": "training",
-    "isDone": false,
+    "isDone": true,
     "fields": [
       {
         "source": "ID",
@@ -138,7 +138,7 @@
   {
     "sourceTableName": "tblAgencies",
     "destinationTableName": "company",
-    "isDone": false,
+    "isDone": true,
     "fields": [
       {
         "source": "ID",
@@ -165,7 +165,7 @@
   {
     "sourceTableName": "tblCertificateNumbers",
     "destinationTableName": "certificate",
-    "isDone": false,
+    "isDone": true,
     "fields": [
       {
         "source": "RecordID",
@@ -183,7 +183,7 @@
   {
     "sourceTableName": "tblCourseCourseDescription",
     "destinationTableName": "course_item_rel",
-    "isDone": false,
+    "isDone": true,
     "fields": [
       {
         "source": "ID",
@@ -205,7 +205,7 @@
   {
     "sourceTableName": "tblCourseDescriptions",
     "destinationTableName": "course_item",
-    "isDone": false,
+    "isDone": true,
     "fields": [
       {
         "source": "ID",
@@ -223,7 +223,7 @@
   {
     "sourceTableName": "vwCertificateFormats",
     "destinationTableName": "certificate_type",
-    "isDone": false,
+    "isDone": true,
     "fields": [
       {
         "source": "ID",
@@ -241,7 +241,7 @@
   {
     "sourceTableName": "tblHSECourses",
     "destinationTableName": "course",
-    "isDone": false,
+    "isDone": true,
     "fields": [
       {
         "source": "ID",
@@ -319,7 +319,7 @@
   {
     "sourceTableName": "tblOpitoGeneratedRecords",
     "destinationTableName": "opito",
-    "isDone": false,
+    "isDone": true,
     "fields": [
       {
         "source": "record_id",
@@ -392,7 +392,7 @@
   {
     "sourceTableName": "tblSex",
     "destinationTableName": "sex",
-    "isDone": false,
+    "isDone": true,
     "fields": [
       {
         "source": "SexID",

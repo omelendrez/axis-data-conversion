@@ -1,7 +1,7 @@
 [
   {
     "destinationTableName": "status",
-    "isDone": false,
+    "isDone": true,
     "drop": "DROP TABLE IF EXISTS status;",
     "create": "CREATE TABLE status (id TINYINT NOT NULL AUTO_INCREMENT, state VARCHAR(45) NOT NULL, status VARCHAR(45) NOT NULL, continue_flow TINYINT, PRIMARY KEY (id));",
     "insert": "INSERT INTO status VALUES ?",
@@ -77,7 +77,7 @@
   {
     "sourceTableName": "empTraining",
     "destinationTableName": "tracking",
-    "isDone": false,
+    "isDone": true,
     "isInsert": true,
     "drop": "DROP TABLE IF EXISTS tracking;",
     "create": "CREATE TABLE tracking (id INT NOT NULL AUTO_INCREMENT, training INT, status TINYINT NOT NULL, user SMALLINT, updated DATETIME, PRIMARY KEY (id));",
@@ -103,7 +103,7 @@
   },
   {
     "title": "Updated trainee companies",
-    "isDone": false,
+    "isDone": true,
     "isUpdate": true,
     "steps": [
       "UPDATE trainee SET company='0000' WHERE company NOT IN (SELECT code FROM company);"
@@ -111,7 +111,7 @@
   },
   {
     "title": "Updated training trackings",
-    "isDone": false,
+    "isDone": true,
     "isUpdate": true,
     "steps": [
       "DROP TABLE IF EXISTS tracking2",
@@ -123,7 +123,7 @@
   },
   {
     "title": "Secure passwords",
-    "isDone": false,
+    "isDone": true,
     "isSecure": true,
     "fnCreate": "CREATE FUNCTION IF NOT EXISTS decrypt (crypted CHAR(100)) RETURNS CHAR(100) DETERMINISTIC BEGIN DECLARE pos DECIMAL DEFAULT 1;DECLARE pwd CHAR(100) DEFAULT '';WHILE pos <= LENGTH(crypted) DO SET pwd = CONCAT(pwd,CHAR(CONVERT(substring(crypted, pos, 3), DECIMAL)));SET pos = pos+3;END WHILE;return LOWER(pwd);END;",
     "query": "SELECT id, decrypt(password) password FROM user WHERE LENGTH(TRIM(password))>0;",
@@ -132,7 +132,7 @@
   },
   {
     "destinationTableName": "role",
-    "isDone": false,
+    "isDone": true,
     "drop": "DROP TABLE IF EXISTS role;",
     "create": "CREATE TABLE role (id SMALLINT NOT NULL AUTO_INCREMENT, name VARCHAR(45) NOT NULL,PRIMARY KEY (id));",
     "insert": "INSERT INTO role VALUES ?",

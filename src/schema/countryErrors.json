@@ -1,0 +1,58 @@
+[
+  {
+    "num_code": "226",
+    "alpha_2_code": "GQ",
+    "alpha_3_code": "GNQ",
+    "en_short_name": "Equatorial Guinea",
+    "nationality": "EQUITORIAL GUINEA"
+  },
+  {
+    "num_code": "288",
+    "alpha_2_code": "GH",
+    "alpha_3_code": "GHA",
+    "en_short_name": "Ghana",
+    "nationality": "GHANIAN"
+  },
+  {
+    "num_code": "340",
+    "alpha_2_code": "HN",
+    "alpha_3_code": "HND",
+    "en_short_name": "Honduras",
+    "nationality": "HONDURAS"
+  },
+  {
+    "num_code": "442",
+    "alpha_2_code": "LU",
+    "alpha_3_code": "LUX",
+    "en_short_name": "Luxembourg",
+    "nationality": "LUXEMBOURGER"
+  },
+  {
+    "num_code": "508",
+    "alpha_2_code": "MZ",
+    "alpha_3_code": "MOZ",
+    "en_short_name": "Mozambique",
+    "nationality": "MOZAMBIQUE"
+  },
+  {
+    "num_code": "554",
+    "alpha_2_code": "NZ",
+    "alpha_3_code": "NZL",
+    "en_short_name": "New Zealand",
+    "nationality": "NEW ZEALANDER"
+  },
+  {
+    "num_code": "608",
+    "alpha_2_code": "PH",
+    "alpha_3_code": "PHL",
+    "en_short_name": "Philippines",
+    "nationality": "PHILIPINES"
+  },
+  {
+    "num_code": "804",
+    "alpha_2_code": "UA",
+    "alpha_3_code": "UKR",
+    "en_short_name": "Ukraine",
+    "nationality": "UKRANIAN"
+  }
+]
