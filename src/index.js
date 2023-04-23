@@ -4,6 +4,11 @@ const conversionSchemas = require('./schema/conversion.json')
 
 const data = require('./process/migration')
 const post = require('./process/conversion')
+const {
+  createTable,
+  updateTrainees,
+  convertData
+} = require('./process/nationality')
 
 async function run() {
   try {
@@ -66,6 +71,11 @@ async function run() {
         })
     )
 
+    await createTable()
+    await updateTrainees()
+    await convertData()
+    console.log()
+
     console.log('Total tables processed:', tables)
     console.log('Total records read from MSSQL:', readRecords)
     console.log('Total records inserted to MySQL:', insertedRecords)
@@ -74,7 +84,6 @@ async function run() {
     console.log('AXIS DATA CONVERSION: Completed')
 
     setTimeout(() => process.exit(), 1000)
-
   } catch (err) {
     console.dir(err)
     setTimeout(() => process.exit(), 1000)
