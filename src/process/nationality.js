@@ -81,6 +81,12 @@ const convertData = () => {
     await mySql.query(
       "UPDATE trainee SET state=(SELECT id FROM state WHERE name='- Foreigner -') WHERE nationality<>566;"
     )
+    await mySql.query(
+      'UPDATE training t INNER JOIN course c ON t.course = c.code SET t.course = c.id;'
+    )
+    await mySql.query('ALTER TABLE course DROP INDEX course_code_idx;')
+    await mySql.query('ALTER TABLE course DROP COLUMN code;')
+
     mySql.end()
     resolve()
   })
