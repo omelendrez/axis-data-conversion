@@ -66,26 +66,41 @@ const createTable = () => {
 
 const convertData = () => {
   return new Promise(async (resolve, reject) => {
-    console.log(
-      'Updating trainees, renaming and table nationality2 to nationality'
-    )
     const mySql = await mysql.connect()
     const db = 'axis'
     await mySql.query(`USE ${db};`)
+    console.log(
+      'Update trainees with new standard nationality table, drop old table and rename new one.'
+    )
     await mySql.query(
       'UPDATE trainee t INNER JOIN nationalities n ON t.id = n.trainee SET t.nationality = n.nationality;'
     )
     await mySql.query('DROP TABLE IF EXISTS nationalities;')
     await mySql.query('DROP TABLE IF EXISTS nationality;')
     await mySql.query('RENAME TABLE nationality2 TO nationality;')
+
+    console.log('Update state for foreigner trainees.')
     await mySql.query(
       "UPDATE trainee SET state=(SELECT id FROM state WHERE name='- Foreigner -') WHERE nationality<>566;"
     )
+
+    console.log('Update training table with course id instead of code.')
     await mySql.query(
       'UPDATE training t INNER JOIN course c ON t.course = c.code SET t.course = c.id;'
     )
+
+    console.log('Drop code field from course table.')
     await mySql.query('ALTER TABLE course DROP INDEX course_code_idx;')
     await mySql.query('ALTER TABLE course DROP COLUMN code;')
+
+    console.log('Update trainee table with company id instead of code.')
+    await mySql.query(
+      'UPDATE trainee t INNER JOIN company c ON t.company = c.code SET t.company = c.id;'
+    )
+
+    console.log('Drop code field from company table.')
+    await mySql.query('ALTER TABLE company DROP INDEX company_code_idx;')
+    await mySql.query('ALTER TABLE company DROP COLUMN code;')
 
     mySql.end()
     resolve()
