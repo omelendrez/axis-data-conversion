@@ -81,7 +81,7 @@ const updateTrainingStatus = (t) => {
       })
 
       await mySql.query(
-        'UPDATE training SET status=11 WHERE trainee NOT IN (select id FROM trainee WHERE status=1);'
+        'UPDATE training SET status=11 WHERE learner NOT IN (select id FROM learner WHERE status=1);'
       )
 
       console.log(formatConsole(t.destinationTableName))

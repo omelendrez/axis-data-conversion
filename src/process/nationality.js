@@ -3,20 +3,20 @@ const mysql = require('../mysql/mysql-connect')
 const countries = require('../schema/countries.json')
 const countryErrors = require('../schema/countryErrors.json')
 
-const updateTrainees = () => {
+const updateLearners = () => {
   return new Promise(async (resolve, reject) => {
     console.log(
-      'Creating trainee nationalities table with all matching and not matching records'
+      'Creating learner nationalities table with all matching and not matching records'
     )
     const mySql = await mysql.connect()
     const db = 'axis'
     await mySql.query(`USE ${db};`)
     const [res] = await mySql.query(
-      'SELECT t.id, n.name, t.nationality FROM trainee t INNER JOIN nationality n ON t.nationality = n.code;'
+      'SELECT t.id, n.name, t.nationality FROM learner t INNER JOIN nationality n ON t.nationality = n.code;'
     )
     await mySql.query('DROP TABLE IF EXISTS nationalities;')
     await mySql.query(
-      'CREATE TABLE nationalities (trainee INT,nationality SMALLINT, old_nationality SMALLINT, PRIMARY KEY (trainee));'
+      'CREATE TABLE nationalities (learner INT,nationality SMALLINT, old_nationality SMALLINT, PRIMARY KEY (learner));'
     )
 
     const allCountries = [...countries, ...countryErrors]
@@ -70,18 +70,18 @@ const convertData = () => {
     const db = 'axis'
     await mySql.query(`USE ${db};`)
     console.log(
-      'Update trainees with new standard nationality table, drop old table and rename new one.'
+      'Update learners with new standard nationality table, drop old table and rename new one.'
     )
     await mySql.query(
-      'UPDATE trainee t INNER JOIN nationalities n ON t.id = n.trainee SET t.nationality = n.nationality;'
+      'UPDATE learner t INNER JOIN nationalities n ON t.id = n.learner SET t.nationality = n.nationality;'
     )
     await mySql.query('DROP TABLE IF EXISTS nationalities;')
     await mySql.query('DROP TABLE IF EXISTS nationality;')
     await mySql.query('RENAME TABLE nationality2 TO nationality;')
 
-    console.log('Update state for foreigner trainees.')
+    console.log('Update state for foreigner learners.')
     await mySql.query(
-      "UPDATE trainee SET state=(SELECT id FROM state WHERE name='- Foreigner -') WHERE nationality<>566;"
+      "UPDATE learner SET state=(SELECT id FROM state WHERE name='- Foreigner -') WHERE nationality<>566;"
     )
 
     console.log('Update training table with course id instead of code.')
@@ -93,14 +93,24 @@ const convertData = () => {
     await mySql.query('ALTER TABLE course DROP INDEX course_code_idx;')
     await mySql.query('ALTER TABLE course DROP COLUMN code;')
 
-    console.log('Update trainee table with company id instead of code.')
+    console.log('Update learner table with company id instead of code.')
     await mySql.query(
-      'UPDATE trainee t INNER JOIN company c ON t.company = c.code SET t.company = c.id;'
+      'UPDATE learner t INNER JOIN company c ON t.company = c.code SET t.company = c.id;'
     )
 
     console.log('Drop code field from company table.')
     await mySql.query('ALTER TABLE company DROP INDEX company_code_idx;')
     await mySql.query('ALTER TABLE company DROP COLUMN code;')
+
+    console.log('Delete training records with wrong or empty course code.')
+    await mySql.query(
+      'DELETE FROM training WHERE course NOT IN (SELECT id FROM course);'
+    )
+
+    console.log('Delete learner with no training.')
+    await mySql.query(
+      'DELETE FROM learner WHERE id NOT IN (SELECT learner FROM training);'
+    )
 
     mySql.end()
     resolve()
@@ -108,7 +118,7 @@ const convertData = () => {
 }
 
 module.exports = {
-  updateTrainees,
+  updateLearners,
   createTable,
   convertData
 }

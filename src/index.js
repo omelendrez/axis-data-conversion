@@ -6,7 +6,7 @@ const data = require('./process/migration')
 const post = require('./process/conversion')
 const {
   createTable,
-  updateTrainees,
+  updateLearners,
   convertData
 } = require('./process/nationality')
 
@@ -72,7 +72,7 @@ async function run() {
     )
 
     await createTable()
-    await updateTrainees()
+    await updateLearners()
     await convertData()
     console.log()
 
