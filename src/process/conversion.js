@@ -80,10 +80,6 @@ const updateTrainingStatus = (t) => {
         })
       })
 
-      await mySql.query(
-        'UPDATE training SET status=11 WHERE learner NOT IN (select id FROM learner WHERE status=1);'
-      )
-
       console.log(formatConsole(t.destinationTableName))
 
       const summary = [{ title: 'Updated MySQL records', records: updatedRows }]
@@ -184,7 +180,7 @@ const addTracking = (t) => {
       const values = []
       result.recordset.forEach((r) => {
         fields.forEach(async (f) => {
-          if (r[f.date] && r[f.user]) {
+          if (r[f.date] && r[f.user] !== null) {
             values.push([r.ID, f.status, r[f.user], r[f.date]])
           }
         })

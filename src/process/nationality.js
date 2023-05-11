@@ -43,7 +43,7 @@ const updateLearners = () => {
 const createTable = () => {
   return new Promise(async (resolve, reject) => {
     console.log(
-      'Creating new table nationality2 with the new standard list of countries'
+      'Creating new table nationality2 with the ISO standard list of countries'
     )
     const mySql = await mysql.connect()
     const db = 'axis'
@@ -107,9 +107,30 @@ const convertData = () => {
       'DELETE FROM training WHERE course NOT IN (SELECT id FROM course);'
     )
 
-    console.log('Delete learner with no training.')
+    console.log('Delete learner with no training records.')
     await mySql.query(
       'DELETE FROM learner WHERE id NOT IN (SELECT learner FROM training);'
+    )
+
+    console.log('Delete contact info for missing learners.')
+    await mySql.query(
+      'DELETE FROM contact_info WHERE learner NOT IN (SELECT id FROM learner);'
+    )
+
+    console.log(
+      "Delete course description when it doesn't exists in course/description relationship."
+    )
+    await mySql.query(
+      'DELETE FROM course_item WHERE id NOT IN (SELECT item FROM course_item_rel);'
+    )
+
+    console.log('Delete orphan course/description relationship.')
+    await mySql.query(
+      'DELETE FROM course_item_rel WHERE item NOT IN (SELECT id FROM course_item);'
+    )
+
+    await mySql.query(
+      'DELETE FROM course_item_rel WHERE course NOT IN (SELECT id FROM course);'
     )
 
     mySql.end()
