@@ -182,6 +182,61 @@
     "insert": "INSERT INTO certificate VALUES ?"
   },
   {
+    "sourceTableName": "tblHSECourses",
+    "destinationTableName": "course",
+    "isDone": false,
+    "fields": [
+      {
+        "source": "ID",
+        "destination": "id"
+      },
+      {
+        "source": "CourseCode",
+        "destination": "code"
+      },
+      {
+        "source": "CourseName",
+        "destination": "name"
+      },
+      {
+        "source": "Front_ID",
+        "destination": "front_id_text"
+      },
+      {
+        "source": "Back_ID",
+        "destination": "back_id_text"
+      },
+      {
+        "source": "IDCard",
+        "destination": "id_card"
+      },
+      {
+        "source": "Duration",
+        "destination": "duration"
+      },
+      {
+        "source": "Validity",
+        "destination": "validity"
+      },
+      {
+        "source": "CertificateType",
+        "destination": "cert_type"
+      },
+      {
+        "source": "CertIDCard",
+        "destination": "cert_id_card"
+      },
+      {
+        "source": "opito_registration_code",
+        "destination": "opito_reg_code"
+      }
+    ],
+    "drop": "DROP TABLE IF EXISTS course;",
+    "create": "CREATE TABLE course (id SMALLINT NOT NULL AUTO_INCREMENT, code CHAR(3) NOT NULL, name VARCHAR(60), front_id VARCHAR(45), back_id VARCHAR(45), id_card TINYINT, duration TINYINT, validity TINYINT, cert_type TINYINT, cert_id_card TINYINT, opito_reg_code VARCHAR(4), PRIMARY KEY (id));",
+    "insert": "INSERT INTO course VALUES ?",
+    "index": "ALTER TABLE course ADD INDEX course_code_idx (code ASC) VISIBLE;"
+  },
+  {
     "sourceTableName": "tblCourseCourseDescription",
     "destinationTableName": "course_item_rel",
     "isDone": false,
@@ -238,61 +293,6 @@
     "drop": "DROP TABLE IF EXISTS certificate_type;",
     "create": "CREATE TABLE certificate_type (id CHAR(1) NOT NULL, name VARCHAR(45) NOT NULL, PRIMARY KEY (id));",
     "insert": "INSERT INTO certificate_type VALUES ?"
-  },
-  {
-    "sourceTableName": "tblHSECourses",
-    "destinationTableName": "course",
-    "isDone": false,
-    "fields": [
-      {
-        "source": "ID",
-        "destination": "id"
-      },
-      {
-        "source": "CourseCode",
-        "destination": "code"
-      },
-      {
-        "source": "CourseName",
-        "destination": "name"
-      },
-      {
-        "source": "Front_ID",
-        "destination": "front_id_text"
-      },
-      {
-        "source": "Back_ID",
-        "destination": "back_id_text"
-      },
-      {
-        "source": "IDCard",
-        "destination": "id_card"
-      },
-      {
-        "source": "Duration",
-        "destination": "duration"
-      },
-      {
-        "source": "Validity",
-        "destination": "validity"
-      },
-      {
-        "source": "CertificateType",
-        "destination": "cert_type"
-      },
-      {
-        "source": "CertIDCard",
-        "destination": "cert_id_card"
-      },
-      {
-        "source": "opito_registration_code",
-        "destination": "opito_reg_code"
-      }
-    ],
-    "drop": "DROP TABLE IF EXISTS course;",
-    "create": "CREATE TABLE course (id SMALLINT NOT NULL AUTO_INCREMENT, code CHAR(3) NOT NULL, name VARCHAR(60), front_id VARCHAR(45), back_id VARCHAR(45), id_card TINYINT, duration TINYINT, validity TINYINT, cert_type TINYINT, cert_id_card TINYINT, opito_reg_code VARCHAR(4), PRIMARY KEY (id));",
-    "insert": "INSERT INTO course VALUES ?",
-    "index": "ALTER TABLE course ADD INDEX course_code_idx (code ASC) VISIBLE;"
   },
   {
     "sourceTableName": "tblNationalities",
