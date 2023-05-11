@@ -123,21 +123,10 @@
   },
   {
     "title": "Updated learner companies",
-    "isDone": true,
-    "isUpdate": true,
-    "steps": [
-      "UPDATE learner SET company='0000' WHERE company NOT IN (SELECT code FROM company);"
-    ]
-  },
-  {
-    "title": "Updated training trackings",
     "isDone": false,
     "isUpdate": true,
     "steps": [
-      "DROP TABLE IF EXISTS tracking2",
-      "CREATE TABLE tracking2 SELECT training, status, user, updated FROM tracking t WHERE updated=(SELECT MAX(updated) FROM tracking t2 WHERE t2.training=t.training);",
-      "UPDATE training t INNER JOIN tracking2 t2 on t2.training=t.id SET t.status=t2.status, user=t2.user, updated=t2.updated;",
-      "UPDATE training SET status=10 WHERE id IN (SELECT id FROM opito) OR certificate<>'';"
+      "UPDATE learner SET company='0000' WHERE company NOT IN (SELECT code FROM company);"
     ]
   },
   {

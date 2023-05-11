@@ -133,6 +133,14 @@ const convertData = () => {
       'DELETE FROM course_item_rel WHERE course NOT IN (SELECT id FROM course);'
     )
 
+    console.log('Create tracking records')
+
+    await mySql.query(
+      'UPDATE training t INNER JOIN tracking t2 on t2.training=t.id SET t.status=t2.status;'
+    )
+
+    await mySql.query('UPDATE training SET status=10 WHERE certificate<>""')
+
     mySql.end()
     resolve()
   })

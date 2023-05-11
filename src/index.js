@@ -8,7 +8,7 @@ const {
   createTable,
   updateLearners,
   convertData
-} = require('./process/nationality')
+} = require('./process/post-process')
 
 async function run() {
   try {
@@ -74,6 +74,7 @@ async function run() {
     await createTable()
     await updateLearners()
     await convertData()
+
     console.log()
 
     console.log('Total tables processed:', tables)
