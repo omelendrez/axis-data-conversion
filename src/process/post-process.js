@@ -141,6 +141,17 @@ const convertData = () => {
 
     await mySql.query('UPDATE training SET status=10 WHERE certificate<>""')
 
+    console.log('Create class table')
+    await mySql.query('DROP TABLE IF EXISTS class;')
+    await mySql.query(
+      'CREATE TABLE class (id INT NOT NULL AUTO_INCREMENT,course SMALLINT NOT NULL,start DATE NOT NULL,learners TINYINT,PRIMARY KEY (id));'
+    )
+
+    console.log('Generate class table records')
+    await mySql.query(
+      'INSERT INTO class (course, start, learners) SELECT course, start, count(1) FROM training GROUP BY course,start ORDER BY start; '
+    )
+
     mySql.end()
     resolve()
   })
