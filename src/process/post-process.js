@@ -2,6 +2,9 @@ require('dotenv').config()
 const mysql = require('../mysql/mysql-connect')
 const countries = require('../schema/countries.json')
 const countryErrors = require('../schema/countryErrors.json')
+const training_trigger_insert = require('../schema/training_AFTER_INSERT')
+const training_trigger_update = require('../schema/training_AFTER_UPDATE')
+const training_trigger_delete = require('../schema/training_AFTER_DELETE')
 
 const updateLearners = () => {
   return new Promise(async (resolve, reject) => {
@@ -151,6 +154,12 @@ const convertData = () => {
     await mySql.query(
       'INSERT INTO class (course, start, learners) SELECT course, start, count(1) FROM training GROUP BY course,start ORDER BY start; '
     )
+
+    console.log('Create training tiggers')
+
+    await mySql.query(training_trigger_insert.query)
+    await mySql.query(training_trigger_update.query)
+    await mySql.query(training_trigger_delete.query)
 
     mySql.end()
     resolve()
