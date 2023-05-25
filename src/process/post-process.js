@@ -5,6 +5,8 @@ const countryErrors = require('../schema/countryErrors.json')
 const training_trigger_insert = require('../schema/training_AFTER_INSERT')
 const training_trigger_update = require('../schema/training_AFTER_UPDATE')
 const training_trigger_delete = require('../schema/training_AFTER_DELETE')
+const learner_before_insert = require('../schema/learner_BEFORE_INSERT')
+const learner_before_update = require('../schema/learner_BEFORE_UPDATE.js')
 
 const updateLearners = () => {
   return new Promise(async (resolve, reject) => {
@@ -72,6 +74,10 @@ const convertData = () => {
     const mySql = await mysql.connect()
     const db = 'axis'
     await mySql.query(`USE ${db};`)
+
+    console.log('Update missing type in learners')
+    await mySql.query('UPDATE learner SET type="TRN" WHERE type="";')
+
     console.log(
       'Update learners with new standard nationality table, drop old table and rename new one.'
     )
@@ -160,6 +166,11 @@ const convertData = () => {
     await mySql.query(training_trigger_insert.query)
     await mySql.query(training_trigger_update.query)
     await mySql.query(training_trigger_delete.query)
+
+    console.log('Create learner tiggers')
+
+    await mySql.query(learner_before_insert.query)
+    await mySql.query(learner_before_update.query)
 
     mySql.end()
     resolve()
