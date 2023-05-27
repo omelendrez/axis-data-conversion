@@ -1,7 +1,7 @@
 module.exports.query = `CREATE TRIGGER learner_BEFORE_INSERT BEFORE INSERT ON learner FOR EACH ROW BEGIN
 	DECLARE last_badge VARCHAR(255) DEFAULT '';
     DECLARE new_badge INT DEFAULT 0;
-    DECLARE prefix VARCHAR(2);
+    DECLARE prefix VARCHAR(2) DEFAULT '';
 
     IF NEW.type = 'TRN' THEN
 		SET prefix = 'TR';
