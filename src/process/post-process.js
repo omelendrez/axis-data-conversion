@@ -172,6 +172,20 @@ const convertData = () => {
     await mySql.query(learner_before_insert.query)
     await mySql.query(learner_before_update.query)
 
+    console.log('Create assesments table')
+
+    await mySql.query('DROP TABLE IF EXISTS course_assesment;')
+    await mySql.query(
+      'CREATE TABLE course_assesment (id SMALLINT NOT NULL AUTO_INCREMENT, name VARCHAR(60), PRIMARY KEY (id));'
+    )
+
+    console.log('Create course/assesments relationship')
+
+    mySql.query('DROP TABLE IF EXISTS course_assesment_rel;')
+    mySql.query(
+      'CREATE TABLE course_assesment_rel (id INT NOT NULL AUTO_INCREMENT, course SMALLINT, assesment SMALLINT, PRIMARY KEY (id));'
+    )
+
     mySql.end()
     resolve()
   })
