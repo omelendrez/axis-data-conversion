@@ -196,15 +196,18 @@
       },
       {
         "source": "CourseName",
-        "destination": "name"
+        "destination": "name",
+        "trim": true
       },
       {
         "source": "Front_ID",
-        "destination": "front_id_text"
+        "destination": "front_id_text",
+        "trim": true
       },
       {
         "source": "Back_ID",
-        "destination": "back_id_text"
+        "destination": "back_id_text",
+        "trim": true
       },
       {
         "source": "IDCard",
@@ -228,7 +231,8 @@
       },
       {
         "source": "opito_registration_code",
-        "destination": "opito_reg_code"
+        "destination": "opito_reg_code",
+        "trim": true
       }
     ],
     "drop": "DROP TABLE IF EXISTS course;",

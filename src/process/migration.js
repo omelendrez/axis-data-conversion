@@ -32,25 +32,36 @@ function convert(t) {
       await result.recordset.forEach(async (r) => {
         const record = []
         t.fields.forEach((f) => {
-          record.push(f.lowercase ? r[f.source].toLowerCase() : r[f.source])
+          let value = r[f.source]
+          if (f.lowercase) {
+            value = value.toLowerCase()
+          }
+          if (f.trim) {
+            value = value.trim()
+          }
+          record.push(value)
         })
         records.push(record)
       })
       const [r] = await mySql.query(t.insert, [records])
 
-      console.log(formatConsole(`${t.sourceTableName} -> ${t.destinationTableName}`))
+      console.log(
+        formatConsole(`${t.sourceTableName} -> ${t.destinationTableName}`)
+      )
 
       const summary = [
         { title: 'Read from MSSQL', records: result.recordset.length },
         { title: 'Inserted to MySQL', records: r.affectedRows },
         { title: 'Failed', records: result.recordset.length - r.affectedRows }
       ]
-      const transformed = summary.reduce((acc, { title, ...rest }) => { acc[title] = rest; return acc }, {})
+      const transformed = summary.reduce((acc, { title, ...rest }) => {
+        acc[title] = rest
+        return acc
+      }, {})
       console.table(transformed)
       console.log()
 
       resolve([result.recordset.length, r.affectedRows])
-
     } catch (error) {
       console.dir(error)
       reject(error)
