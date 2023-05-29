@@ -179,11 +179,18 @@ const convertData = () => {
       'CREATE TABLE course_assesment (id SMALLINT NOT NULL AUTO_INCREMENT, name VARCHAR(60), PRIMARY KEY (id));'
     )
 
-    console.log('Create course/assesments relationship')
+    console.log('Create course/assesments relationship table')
 
     mySql.query('DROP TABLE IF EXISTS course_assesment_rel;')
     mySql.query(
       'CREATE TABLE course_assesment_rel (id INT NOT NULL AUTO_INCREMENT, course SMALLINT, assesment SMALLINT, PRIMARY KEY (id));'
+    )
+
+    console.log('Create user/role relationship table')
+
+    mySql.query('DROP TABLE IF EXISTS user_role;')
+    mySql.query(
+      'CREATE TABLE user_role (id INT NOT NULL AUTO_INCREMENT, user SMALLINT, role SMALLINT, PRIMARY KEY (id));'
     )
 
     mySql.end()
