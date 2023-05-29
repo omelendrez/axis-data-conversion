@@ -193,6 +193,12 @@ const convertData = () => {
       'CREATE TABLE user_role (id INT NOT NULL AUTO_INCREMENT, user SMALLINT, role SMALLINT, PRIMARY KEY (id));'
     )
 
+    console.log('Update dev email address')
+
+    mySql.query(
+      'UPDATE user SET email=REPLACE(email,"escng","gmail") WHERE email LIKE "%escng%";'
+    )
+
     mySql.end()
     resolve()
   })
