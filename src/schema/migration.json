@@ -30,7 +30,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS user;",
-    "create": "CREATE TABLE user (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(45) NOT NULL, full_name VARCHAR(45), password VARCHAR(60), email VARCHAR(45), status TINYINT NOT NULL, role TINYINT DEFAULT 1, PRIMARY KEY (id));",
+    "create": "CREATE TABLE user (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(45) NOT NULL, full_name VARCHAR(45), password VARCHAR(60), email VARCHAR(45), status TINYINT NOT NULL, PRIMARY KEY (id));",
     "insert": "INSERT INTO user (id, name, full_name, password, email, status) VALUES ?"
   },
   {
