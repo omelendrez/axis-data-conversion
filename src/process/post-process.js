@@ -199,6 +199,10 @@ const convertData = () => {
       'UPDATE user SET email=REPLACE(email,"escng","gmail") WHERE email LIKE "%escng%";'
     )
 
+    console.log('Add role to Ndubuisi and Omar')
+
+    mySql.query('INSERT INTO user_role (user, role) VALUES (95,1), (1023,1);')
+
     mySql.end()
     resolve()
   })
