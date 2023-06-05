@@ -106,19 +106,9 @@
         "status": 8
       },
       {
-        "date": "Certificate_issuedOn",
-        "user": "Certificate_issuedBy",
-        "status": 9
-      },
-      {
         "date": "Certificate_printedOn",
         "user": "Certificate_printedBy",
         "status": 9
-      },
-      {
-        "date": "ID_printedOn",
-        "user": "ID_printedBy",
-        "status": 10
       },
       {
         "date": "ID_issuedOn",
