@@ -203,6 +203,14 @@ const convertData = () => {
 
     mySql.query('INSERT INTO user_role (user, role) VALUES (95,1), (1023,1);')
 
+    mySql.query('DROP TABLE IF EXISTS training_medical;')
+    mySql.query(
+      'CREATE TABLE training_medical (id INT NOT NULL AUTO_INCREMENT, training INT, systolic TINYINT, diastolic TINYINT, PRIMARY KEY (id));'
+    )
+    mySql.query(
+      'ALTER TABLE training_medical ADD INDEX training_medical_training_idx (training ASC) VISIBLE;'
+    )
+
     mySql.end()
     resolve()
   })
