@@ -148,7 +148,7 @@ const convertData = () => {
       'UPDATE training t INNER JOIN tracking t2 on t2.training=t.id SET t.status=t2.status;'
     )
 
-    await mySql.query('UPDATE training SET status=10 WHERE certificate<>"";')
+    await mySql.query('UPDATE training SET status=11 WHERE certificate<>"";')
 
     console.log('- Create class table.')
 

@@ -49,35 +49,41 @@
       [
         6,
         "QC done",
-        "Waiting for MD",
+        "Waiting for Finance",
         1
       ],
       [
         7,
+        "Finance done",
+        "Waiting for MD",
+        1
+      ],
+      [
+        8,
         "MD done",
         "Wating for Printing",
         1
       ],
       [
-        8,
+        9,
         "Certificate printing done",
         "Waiting for Opito Transfer Letter",
         1
       ],
       [
-        9,
+        10,
         "ID printing done",
         "Waiting for Opito Transfer Letter",
         1
       ],
       [
-        10,
+        11,
         "Completed",
         "Completed",
         0
       ],
       [
-        11,
+        12,
         "Training Cancelled",
         "Cancelled",
         0
@@ -97,27 +103,27 @@
       {
         "date": "ApprovedOn",
         "user": "ApprovedBy",
-        "status": 7
+        "status": 8
       },
       {
         "date": "Certificate_issuedOn",
         "user": "Certificate_issuedBy",
-        "status": 8
+        "status": 9
       },
       {
         "date": "Certificate_printedOn",
         "user": "Certificate_printedBy",
-        "status": 8
+        "status": 9
       },
       {
         "date": "ID_printedOn",
         "user": "ID_printedBy",
-        "status": 9
+        "status": 10
       },
       {
         "date": "ID_issuedOn",
         "user": "ID_issuedBy",
-        "status": 9
+        "status": 10
       }
     ]
   },
