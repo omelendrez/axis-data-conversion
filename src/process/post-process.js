@@ -11,7 +11,7 @@ const learner_before_update = require('../schema/learner_BEFORE_UPDATE.js')
 const updateLearners = () => {
   return new Promise(async (resolve, reject) => {
     console.log(
-      'Creating learner nationalities table with all matching and not matching records'
+      '- Creating learner nationalities table with all matching and not matching records.'
     )
     const mySql = await mysql.connect()
     const db = 'axis'
@@ -48,7 +48,7 @@ const updateLearners = () => {
 const createTable = () => {
   return new Promise(async (resolve, reject) => {
     console.log(
-      'Creating new table nationality2 with the ISO standard list of countries'
+      '- Creating new table nationality2 with the ISO standard list of countries.'
     )
     const mySql = await mysql.connect()
     const db = 'axis'
@@ -75,11 +75,11 @@ const convertData = () => {
     const db = 'axis'
     await mySql.query(`USE ${db};`)
 
-    console.log('Update missing type in learners')
+    console.log('- Update missing type in learners')
     await mySql.query('UPDATE learner SET type="TRN" WHERE type="";')
 
     console.log(
-      'Update learners with new standard nationality table, drop old table and rename new one.'
+      '- Update learners with new standard nationality table, drop old table and rename new one.'
     )
     await mySql.query(
       'UPDATE learner t INNER JOIN nationalities n ON t.id = n.learner SET t.nationality = n.nationality;'
@@ -88,52 +88,52 @@ const convertData = () => {
     await mySql.query('DROP TABLE IF EXISTS nationality;')
     await mySql.query('RENAME TABLE nationality2 TO nationality;')
 
-    console.log('Update state for foreigner learners.')
+    console.log('- Update state for foreigner learners.')
     await mySql.query(
       "UPDATE learner SET state=(SELECT id FROM state WHERE name='- Foreigner -') WHERE nationality<>566;"
     )
 
-    console.log('Update training table with course id instead of code.')
+    console.log('- Update training table with course id instead of code.')
     await mySql.query(
       'UPDATE training t INNER JOIN course c ON t.course = c.code SET t.course = c.id;'
     )
 
-    console.log('Drop code field from course table.')
+    console.log('- Drop code field from course table.')
     await mySql.query('ALTER TABLE course DROP INDEX course_code_idx;')
     await mySql.query('ALTER TABLE course DROP COLUMN code;')
 
-    console.log('Update learner table with company id instead of code.')
+    console.log('- Update learner table with company id instead of code.')
     await mySql.query(
       'UPDATE learner t INNER JOIN company c ON t.company = c.code SET t.company = c.id;'
     )
 
-    console.log('Drop code field from company table.')
+    console.log('- Drop code field from company table.')
     await mySql.query('ALTER TABLE company DROP INDEX company_code_idx;')
     await mySql.query('ALTER TABLE company DROP COLUMN code;')
 
-    console.log('Delete training records with wrong or empty course code.')
+    console.log('- Delete training records with wrong or empty course code.')
     await mySql.query(
       'DELETE FROM training WHERE course NOT IN (SELECT id FROM course);'
     )
 
-    console.log('Delete learner with no training records.')
+    console.log('- Delete learner with no training records.')
     await mySql.query(
       'DELETE FROM learner WHERE id NOT IN (SELECT learner FROM training);'
     )
 
-    console.log('Delete contact info for missing learners.')
+    console.log('- Delete contact info for missing learners.')
     await mySql.query(
       'DELETE FROM contact_info WHERE learner NOT IN (SELECT id FROM learner);'
     )
 
     console.log(
-      "Delete course description when it doesn't exists in course/description relationship."
+      "- Delete course description when it doesn't exists in course/description relationship."
     )
     await mySql.query(
       'DELETE FROM course_item WHERE id NOT IN (SELECT item FROM course_item_rel);'
     )
 
-    console.log('Delete orphan course/description relationship.')
+    console.log('- Delete orphan course/description relationship.')
     await mySql.query(
       'DELETE FROM course_item_rel WHERE item NOT IN (SELECT id FROM course_item);'
     )
@@ -142,66 +142,70 @@ const convertData = () => {
       'DELETE FROM course_item_rel WHERE course NOT IN (SELECT id FROM course);'
     )
 
-    console.log('Create tracking records')
+    console.log('- Create tracking records.')
 
     await mySql.query(
       'UPDATE training t INNER JOIN tracking t2 on t2.training=t.id SET t.status=t2.status;'
     )
 
-    await mySql.query('UPDATE training SET status=10 WHERE certificate<>""')
+    await mySql.query('UPDATE training SET status=10 WHERE certificate<>"";')
 
-    console.log('Create class table')
+    console.log('- Create class table.')
+
     await mySql.query('DROP TABLE IF EXISTS class;')
     await mySql.query(
       'CREATE TABLE class (id INT NOT NULL AUTO_INCREMENT,course SMALLINT NOT NULL,start DATE NOT NULL,learners TINYINT,PRIMARY KEY (id));'
     )
 
-    console.log('Generate class table records')
+    console.log('- Generate class table records.')
+
     await mySql.query(
-      'INSERT INTO class (course, start, learners) SELECT course, start, count(1) FROM training GROUP BY course,start ORDER BY start; '
+      'INSERT INTO class (course, start, learners) SELECT course, start, count(1) FROM training GROUP BY course,start ORDER BY start;'
     )
 
-    console.log('Create training tiggers')
+    console.log('- Create training tiggers.')
 
     await mySql.query(training_trigger_insert.query)
     await mySql.query(training_trigger_update.query)
     await mySql.query(training_trigger_delete.query)
 
-    console.log('Create learner tiggers')
+    console.log('- Create learner tiggers.')
 
     await mySql.query(learner_before_insert.query)
     await mySql.query(learner_before_update.query)
 
-    console.log('Create assesments table')
+    console.log('- Create assesments table.')
 
     await mySql.query('DROP TABLE IF EXISTS course_assesment;')
     await mySql.query(
       'CREATE TABLE course_assesment (id SMALLINT NOT NULL AUTO_INCREMENT, name VARCHAR(60), PRIMARY KEY (id));'
     )
 
-    console.log('Create course/assesments relationship table')
+    console.log('- Create course/assesments relationship table.')
 
     mySql.query('DROP TABLE IF EXISTS course_assesment_rel;')
     mySql.query(
       'CREATE TABLE course_assesment_rel (id INT NOT NULL AUTO_INCREMENT, course SMALLINT, assesment SMALLINT, PRIMARY KEY (id));'
     )
 
-    console.log('Create user/role relationship table')
+    console.log('- Create user/role relationship table.')
 
     mySql.query('DROP TABLE IF EXISTS user_role;')
     mySql.query(
       'CREATE TABLE user_role (id INT NOT NULL AUTO_INCREMENT, user SMALLINT, role SMALLINT, PRIMARY KEY (id));'
     )
 
-    console.log('Update dev email address')
+    console.log('- Update dev email address.')
 
     mySql.query(
       'UPDATE user SET email=REPLACE(email,"escng","gmail") WHERE email LIKE "%escng%";'
     )
 
-    console.log('Add role to Ndubuisi and Omar')
+    console.log('- Add role to Ndubuisi and Omar.')
 
     mySql.query('INSERT INTO user_role (user, role) VALUES (95,1), (1023,1);')
+
+    console.log('- Create training medical table.')
 
     mySql.query('DROP TABLE IF EXISTS training_medical;')
     mySql.query(
