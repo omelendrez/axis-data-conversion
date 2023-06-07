@@ -209,10 +209,14 @@ const convertData = () => {
 
     mySql.query('DROP TABLE IF EXISTS training_medical;')
     mySql.query(
-      'CREATE TABLE training_medical (id INT NOT NULL AUTO_INCREMENT, training INT, systolic TINYINT, diastolic TINYINT, PRIMARY KEY (id));'
+      'CREATE TABLE training_medical (training INT, systolic TINYINT, diastolic TINYINT, PRIMARY KEY (training));'
     )
+
+    console.log('- Create training finance table.')
+
+    mySql.query('DROP TABLE IF EXISTS training_finance;')
     mySql.query(
-      'ALTER TABLE training_medical ADD INDEX training_medical_training_idx (training ASC) VISIBLE;'
+      'CREATE TABLE training_finance (training INT, status TINYINT, user SMALLINT, updated DATETIME DEFAULT NOW(), PRIMARY KEY (training));'
     )
 
     mySql.end()
