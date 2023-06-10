@@ -150,6 +150,16 @@ const convertData = () => {
 
     await mySql.query('UPDATE training SET status=11 WHERE certificate<>"";')
 
+    console.log('- Update empty course end and certificate issued date fields')
+
+    await mySql.query(
+      'UPDATE training t INNER JOIN course c ON c.id = t.course SET end=DATE_ADD(t.start, INTERVAL c.duration-1 day);'
+    )
+
+    await mySql.query(
+      'UPDATE training SET issued=DATE_ADD(end, INTERVAL 1 DAY);'
+    )
+
     console.log('- Create class table.')
 
     await mySql.query('DROP TABLE IF EXISTS class;')
