@@ -101,6 +101,11 @@
     "insert": "INSERT INTO tracking (training, status, user, updated) VALUES ?",
     "fields": [
       {
+        "date": "Updated",
+        "user": "UpdatedBy",
+        "status": 1
+      },
+      {
         "date": "ApprovedOn",
         "user": "ApprovedBy",
         "status": 8
