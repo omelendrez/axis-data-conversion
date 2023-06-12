@@ -226,12 +226,9 @@ const convertData = () => {
       'CREATE TABLE training_medical (training INT, systolic TINYINT, diastolic TINYINT, PRIMARY KEY (training));'
     )
 
-    console.log('- Create training finance table.')
+    console.log('- Update training finance status.')
 
-    mySql.query('DROP TABLE IF EXISTS training_finance;')
-    mySql.query(
-      'CREATE TABLE training_finance (training INT, status TINYINT, user SMALLINT, updated DATETIME DEFAULT NOW(), PRIMARY KEY (training));'
-    )
+    mySql.query('UPDATE training SET finance_status=1;')
 
     mySql.end()
     resolve()
