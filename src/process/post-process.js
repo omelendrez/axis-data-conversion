@@ -164,17 +164,17 @@ const convertData = () => {
       'UPDATE training SET issued=DATE_ADD(end, INTERVAL 1 DAY);'
     )
 
-    console.log('- Create class table.')
+    console.log('- Create classroom table.')
 
-    await mySql.query('DROP TABLE IF EXISTS class;')
+    await mySql.query('DROP TABLE IF EXISTS classroom;')
     await mySql.query(
-      'CREATE TABLE class (id INT NOT NULL AUTO_INCREMENT,course SMALLINT NOT NULL,start DATE NOT NULL,learners TINYINT,PRIMARY KEY (id));'
+      'CREATE TABLE classroom (id INT NOT NULL AUTO_INCREMENT,course SMALLINT NOT NULL,start DATE NOT NULL,learners TINYINT,PRIMARY KEY (id));'
     )
 
-    console.log('- Generate class table records.')
+    console.log('- Generate classroom table records.')
 
     await mySql.query(
-      'INSERT INTO class (course, start, learners) SELECT course, start, count(1) FROM training GROUP BY course,start ORDER BY start;'
+      'INSERT INTO classroom (course, start, learners) SELECT course, start, count(1) FROM training GROUP BY course,start ORDER BY start;'
     )
 
     console.log('- Create training tiggers.')
