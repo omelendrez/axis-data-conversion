@@ -1,12 +1,9 @@
 require('dotenv').config()
+const fs = require('fs')
+const path = require('path')
 const mysql = require('../mysql/mysql-connect')
 const countries = require('../schema/countries.json')
 const countryErrors = require('../schema/countryErrors.json')
-const training_trigger_insert = require('../schema/training_AFTER_INSERT')
-const training_trigger_update = require('../schema/training_AFTER_UPDATE')
-const training_trigger_delete = require('../schema/training_AFTER_DELETE')
-const learner_before_insert = require('../schema/learner_BEFORE_INSERT')
-const learner_before_update = require('../schema/learner_BEFORE_UPDATE.js')
 
 const updateLearners = () => {
   return new Promise(async (resolve, reject) => {
@@ -137,25 +134,20 @@ const convertData = () => {
     await mySql.query(
       'DELETE FROM course_item_rel WHERE item NOT IN (SELECT id FROM course_item);'
     )
-
     await mySql.query(
       'DELETE FROM course_item_rel WHERE course NOT IN (SELECT id FROM course);'
     )
 
     console.log('- Create tracking records.')
-
     await mySql.query(
       'UPDATE training t INNER JOIN tracking t2 on t2.training=t.id SET t.status=t2.status;'
     )
-
     await mySql.query('UPDATE training SET status=11 WHERE certificate<>"";')
 
     console.log('- Update empty course end and certificate issued date fields')
-
     await mySql.query(
       'UPDATE training SET start=DATE_ADD(start, INTERVAL 1 day), expiry=DATE_ADD(expiry, INTERVAL 1 day);'
     )
-
     await mySql.query(
       'UPDATE training t INNER JOIN course c ON c.id = t.course SET end=DATE_ADD(t.start, INTERVAL c.duration-1 day);'
     )
@@ -172,21 +164,9 @@ const convertData = () => {
     )
 
     console.log('- Generate classroom table records.')
-
     await mySql.query(
       'INSERT INTO classroom (course, start, learners) SELECT course, start, count(1) FROM training GROUP BY course,start ORDER BY start;'
     )
-
-    console.log('- Create training tiggers.')
-
-    await mySql.query(training_trigger_insert.query)
-    await mySql.query(training_trigger_update.query)
-    await mySql.query(training_trigger_delete.query)
-
-    console.log('- Create learner tiggers.')
-
-    await mySql.query(learner_before_insert.query)
-    await mySql.query(learner_before_update.query)
 
     console.log('- Create assesments table.')
 
@@ -202,33 +182,50 @@ const convertData = () => {
       'CREATE TABLE course_assesment_rel (id INT NOT NULL AUTO_INCREMENT, course SMALLINT, assesment SMALLINT, PRIMARY KEY (id));'
     )
 
-    console.log('- Create user/role relationship table.')
+    console.log('- Create training medical table.')
+    await mySql.query('DROP TABLE IF EXISTS training_medical;')
+    await mySql.query(
+      'CREATE TABLE training_medical (training INT, systolic TINYINT, diastolic TINYINT, PRIMARY KEY (training));'
+    )
 
-    mySql.query('DROP TABLE IF EXISTS user_role;')
-    mySql.query(
+    console.log('- Create training assesment table.')
+    await mySql.query('DROP TABLE IF EXISTS training_assesment')
+    await mySql.query(
+      'CREATE TABLE training_assesment (training INT, assesment SMALLINT, status TINYINT, PRIMARY KEY (training));'
+    )
+
+    console.log('- Update training finance status.')
+    await mySql.query('UPDATE training SET finance_status=1;')
+
+    console.log('- Create tiggers.')
+    const triggersPath = path.join(__dirname, '..', 'schema', 'triggers')
+    await fs.readdirSync(triggersPath).map(async (fileName) => {
+      const fullPath = path.join(triggersPath, fileName)
+      const file = await require(fullPath)
+      const query = file?.query
+      if (query) {
+        await mySql.query(query)
+      } else {
+        console.log(`Couldn't load file ${fullPath}`)
+      }
+    })
+
+    console.log('- Create user/role relationship table.')
+    await mySql.query(
       'CREATE TABLE user_role (id INT NOT NULL AUTO_INCREMENT, user SMALLINT, role SMALLINT, PRIMARY KEY (id));'
     )
 
     console.log('- Update dev email address.')
-
-    mySql.query(
-      'UPDATE user SET email=REPLACE(email,"escng","gmail") WHERE email LIKE "%escng%";'
+    const oldDomain = 'escng'
+    const newDomain = 'gmail'
+    await mySql.query(
+      `UPDATE user SET email=REPLACE(email,'${oldDomain}','${newDomain}') WHERE email LIKE '%${oldDomain}%';`
     )
 
     console.log('- Add role to Ndubuisi and Omar.')
-
-    mySql.query('INSERT INTO user_role (user, role) VALUES (95,1), (1023,1);')
-
-    console.log('- Create training medical table.')
-
-    mySql.query('DROP TABLE IF EXISTS training_medical;')
-    mySql.query(
-      'CREATE TABLE training_medical (training INT, systolic TINYINT, diastolic TINYINT, PRIMARY KEY (training));'
+    await mySql.query(
+      'INSERT INTO user_role (user, role) VALUES (95,1), (1023,1);'
     )
-
-    console.log('- Update training finance status.')
-
-    mySql.query('UPDATE training SET finance_status=1;')
 
     mySql.end()
     resolve()
