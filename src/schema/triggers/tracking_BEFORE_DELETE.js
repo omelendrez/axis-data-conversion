@@ -7,11 +7,9 @@ BEFORE
   DECLARE training_status TINYINT;
 
   SELECT
-    training, status
+    OLD.training, OLD.status
   INTO
-    training_id, training_status
-  FROM
-    OLD;
+    training_id, training_status;
 
   IF training_status = 3 THEN
     DELETE FROM
@@ -35,4 +33,5 @@ BEFORE
     WHERE
       id = training_id;
   END IF;
+
 END`
