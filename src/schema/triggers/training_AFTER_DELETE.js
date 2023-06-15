@@ -7,7 +7,7 @@ DECLARE classroom_id INT default 0;
 SELECT
     id INTO classroom_id
 FROM
-    class
+    classroom
 WHERE
     course = OLD.course
     AND start = OLD.start;
@@ -16,20 +16,20 @@ SELECT
     COUNT(1) INTO learners_count
 FROM
     training t
-    INNER JOIN class c ON t.course = c.course
+    INNER JOIN classroom c ON t.course = c.course
     AND t.start = c.start
 WHERE
     c.id = classroom_id;
 
 IF learners_count = 0 THEN
 DELETE FROM
-    class
+    classroom
 WHERE
     id = classroom_id;
 
 ELSE
 UPDATE
-    class
+    classroom
 SET
     learners = learners_count
 WHERE
