@@ -185,7 +185,7 @@ const convertData = () => {
     console.log('- Create training medical table.')
     await mySql.query('DROP TABLE IF EXISTS training_medical;')
     await mySql.query(
-      'CREATE TABLE training_medical (training INT, systolic TINYINT, diastolic TINYINT, PRIMARY KEY (training));'
+      'CREATE TABLE training_medical (training INT, systolic SMALLINT, diastolic SMALLINT, PRIMARY KEY (training));'
     )
 
     console.log('- Create training assesment table.')
