@@ -138,20 +138,18 @@ const convertData = () => {
       'DELETE FROM course_item_rel WHERE course NOT IN (SELECT id FROM course);'
     )
 
-    console.log('- Create tracking records.')
-    await mySql.query(
-      'UPDATE training t INNER JOIN tracking t2 on t2.training=t.id SET t.status=t2.status;'
+    console.log(
+      '- Update training status, empty course end date and certificate issued date fields'
     )
-    await mySql.query('UPDATE training SET status=11 WHERE certificate<>"";')
-
-    console.log('- Update empty course end and certificate issued date fields')
     await mySql.query(
-      'UPDATE training SET start=DATE_ADD(start, INTERVAL 1 day), expiry=DATE_ADD(expiry, INTERVAL 1 day);'
+      'UPDATE training t SET start = DATE_ADD(start, INTERVAL 1 DAY), expiry = DATE_ADD(expiry, INTERVAL 1 DAY);;'
     )
     await mySql.query(
       'UPDATE training t INNER JOIN course c ON c.id = t.course SET end=DATE_ADD(t.start, INTERVAL c.duration-1 day);'
     )
-
+    await mySql.query(
+      'UPDATE training t SET status = (SELECT MAX(tr.status) FROM tracking tr WHERE tr.training = t.id);;'
+    )
     await mySql.query(
       'UPDATE training SET issued=DATE_ADD(end, INTERVAL 1 DAY);'
     )

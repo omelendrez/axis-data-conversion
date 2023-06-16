@@ -179,9 +179,20 @@ const addTracking = (t) => {
       const result = await sql.query(query)
       const values = []
       result.recordset.forEach((r) => {
+        const status = []
         fields.forEach(async (f) => {
           if (r[f.date] && r[f.user] !== null) {
-            values.push([r.ID, f.status, r[f.user], r[f.date]])
+            for (let st = 1; st <= f.status; st++) {
+              if (!status.includes(st)) {
+                values.push([r.ID, st, r[f.user], r[f.date]])
+                status.push(st)
+              }
+            }
+          }
+          const complete = 11
+          if (status.length > 8 && !status.includes(complete)) {
+            values.push([r.ID, complete, r[f.user], r[f.date]])
+            status.push(complete)
           }
         })
       })
