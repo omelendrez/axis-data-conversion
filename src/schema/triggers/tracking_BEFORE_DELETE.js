@@ -25,7 +25,7 @@ BEFORE
       training = training_id;
   END IF;
 
-  IF training_status = 7 THEN
+  IF training_status <= 7 THEN
     UPDATE
       training
     SET
