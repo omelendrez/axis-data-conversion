@@ -31,24 +31,24 @@
       [
         3,
         "Medic done",
-        "Waining for Training Coordinator",
+        "Waining for TC",
         1
       ],
       [
         4,
-        "Training Coordinator done",
+        "TC done",
         "Waiting for Assesment",
         1
       ],
       [
         5,
         "Assesment done",
-        "Waining to QC",
+        "Waining to QA/QC",
         1
       ],
       [
         6,
-        "QC done",
+        "QA/QC done",
         "Waiting for Finance",
         1
       ],
@@ -152,7 +152,7 @@
       ],
       [
         2,
-        "Admin user"
+        "Admin"
       ],
       [
         3,
@@ -168,7 +168,7 @@
       ],
       [
         6,
-        "Training Coordinator"
+        "TC"
       ],
       [
         7,
@@ -176,7 +176,7 @@
       ],
       [
         8,
-        "QC"
+        "QA/QC"
       ],
       [
         9,
