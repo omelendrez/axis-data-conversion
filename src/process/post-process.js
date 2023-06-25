@@ -72,9 +72,12 @@ const convertData = () => {
     const db = 'axis'
     await mySql.query(`USE ${db};`)
 
-    console.log("- Splipt learner' first_name into first and middle names")
+    console.log("- Splipt learner'S first_name into first and middle names")
     await mySql.query(
-      "UPDATE learner SET first_name = SUBSTRING_INDEX(first_name, ' ', 1),middle_name = SUBSTRING_INDEX(first_name, ' ', -1);"
+      "UPDATE learner SET middle_name = SUBSTRING_INDEX(first_name, ' ', -1) WHERE SUBSTRING_INDEX(first_name, ' ', 1) <> SUBSTRING_INDEX(first_name, ' ', -1);"
+    )
+    await mySql.query(
+      "UPDATE learner SET first_name = SUBSTRING_INDEX(first_name, ' ', 1) WHERE SUBSTRING_INDEX(first_name, ' ', 1) <> SUBSTRING_INDEX(first_name, ' ', -1);"
     )
 
     console.log('- Update missing type in learners')
