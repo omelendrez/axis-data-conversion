@@ -138,22 +138,22 @@
     "insert": "INSERT INTO tracking (training, status, user, updated) VALUES ?",
     "fields": [
       {
-        "date": "CONVERT(VARCHAR, Updated, 120)",
+        "date": "Updated",
         "user": "UpdatedBy",
         "status": 1
       },
       {
-        "date": "CONVERT(VARCHAR, ApprovedOn, 120)",
+        "date": "ApprovedOn",
         "user": "ApprovedBy",
         "status": 8
       },
       {
-        "date": "CONVERT(VARCHAR, Certificate_printedOn, 120)",
+        "date": "Certificate_printedOn",
         "user": "Certificate_printedBy",
         "status": 9
       },
       {
-        "date": "CONVERT(VARCHAR, ID_issuedOn, 120)",
+        "date": "ID_issuedOn",
         "user": "ID_issuedBy",
         "status": 10
       }

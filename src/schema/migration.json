@@ -115,11 +115,11 @@
         "destination": "course"
       },
       {
-        "source": "CONVERT(VARCHAR, Starting, 120)",
+        "source": "Starting",
         "destination": "start"
       },
       {
-        "source": "CONVERT(VARCHAR, Ending, 120)",
+        "source": "Ending",
         "destination": "expiry"
       },
       {
@@ -331,7 +331,7 @@
         "destination": "id"
       },
       {
-        "source": "CONVERT(VARCHAR, generated, 120)",
+        "source": "generated",
         "destination": "created"
       }
     ],
@@ -385,7 +385,7 @@
         "destination": "nationality"
       },
       {
-        "source": "CONVERT(VARCHAR, bdate, 120)",
+        "source": "bdate",
         "destination": "birth_date"
       },
       {

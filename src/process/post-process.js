@@ -72,7 +72,7 @@ const convertData = () => {
     const db = 'axis'
     await mySql.query(`USE ${db};`)
 
-    console.log("- Splipt learner'S first_name into first and middle names")
+    console.log("- Splipt learner's first_name into first and middle names")
     await mySql.query(
       "UPDATE learner SET middle_name = SUBSTRING_INDEX(first_name, ' ', -1) WHERE SUBSTRING_INDEX(first_name, ' ', 1) <> SUBSTRING_INDEX(first_name, ' ', -1);"
     )
@@ -152,19 +152,27 @@ const convertData = () => {
       'DELETE FROM course_item_rel WHERE course NOT IN (SELECT id FROM course);'
     )
 
-    console.log('- Update training status, empty course end date fields.')
+    // TODO: Check actual date fields with Nigeria
+    // console.log('- Update dates to GMT+3')
     // await mySql.query(
-    //   'UPDATE training t SET start = DATE_ADD(start, INTERVAL 1 DAY), expiry = DATE_ADD(expiry, INTERVAL 1 DAY);;'
+    //   'UPDATE opito t SET created = DATE_ADD(created, INTERVAL 3 HOUR);'
     // )
-    await mySql.query(
-      'UPDATE training t INNER JOIN course c ON c.id = t.course SET end=DATE_ADD(t.start, INTERVAL c.duration-1 day) WHERE end IS NULL;'
-    )
-    await mySql.query(
-      'UPDATE training t SET status = (SELECT MAX(tr.status) FROM tracking tr WHERE tr.training = t.id);;'
-    )
+    // await mySql.query(
+    //   'UPDATE training t SET start = DATE_ADD(start, INTERVAL 1 DAY), expiry = DATE_ADD(expiry, INTERVAL 1 DAY);'
+    // )
     // await mySql.query(
     //   'UPDATE training SET issued=DATE_ADD(end, INTERVAL 1 DAY);'
     // )
+
+    console.log(
+      '- Update training status, empty course end date and certificate issued date fields.'
+    )
+    await mySql.query(
+      'UPDATE training t INNER JOIN course c ON c.id = t.course SET end=DATE_ADD(t.start, INTERVAL c.duration-1 DAY) WHERE end IS NULL;'
+    )
+    await mySql.query(
+      'UPDATE training t SET status = (SELECT MAX(tr.status) FROM tracking tr WHERE tr.training = t.id);'
+    )
 
     console.log('- Set opito_file in training records')
     await mySql.query(
