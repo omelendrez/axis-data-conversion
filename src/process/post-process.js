@@ -80,7 +80,7 @@ const convertData = () => {
       "UPDATE learner SET first_name = SUBSTRING_INDEX(first_name, ' ', 1) WHERE SUBSTRING_INDEX(first_name, ' ', 1) <> SUBSTRING_INDEX(first_name, ' ', -1);"
     )
 
-    console.log(' - Set learner title')
+    console.log('- Set learner title')
 
     await mySql.query(
       "UPDATE learner SET title = CASE WHEN sex = 'M' THEN 1 ELSE 2 END;"
@@ -153,7 +153,7 @@ const convertData = () => {
     )
 
     console.log(
-      '- Update training status, empty course end date and certificate issued date fields'
+      '- Update training status, empty course end date and certificate issued date fields.'
     )
     await mySql.query(
       'UPDATE training t SET start = DATE_ADD(start, INTERVAL 1 DAY), expiry = DATE_ADD(expiry, INTERVAL 1 DAY);;'
@@ -168,8 +168,15 @@ const convertData = () => {
       'UPDATE training SET issued=DATE_ADD(end, INTERVAL 1 DAY);'
     )
 
-    console.log('- Create classroom table.')
+    console.log('- Set opito_file in training records')
+    await mySql.query(
+      "UPDATE training t INNER JOIN opito o ON t.id = o.id SET opito_file = LOWER(HEX(CAST(DATE_FORMAT(o.created, '%H%i%d%m%Y') AS UNSIGNED)));"
+    )
 
+    console.log('- Remove legacy opito table.')
+    await mySql.query('DROP TABLE IF EXISTS opito;')
+
+    console.log('- Create classroom table.')
     await mySql.query('DROP TABLE IF EXISTS classroom;')
     await mySql.query(
       'CREATE TABLE classroom (id INT NOT NULL AUTO_INCREMENT,course SMALLINT NOT NULL,start DATE NOT NULL,learners TINYINT,PRIMARY KEY (id));'
