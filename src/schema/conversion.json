@@ -91,6 +91,43 @@
     ]
   },
   {
+    "destinationTableName": "title",
+    "isDone": false,
+    "drop": "DROP TABLE IF EXISTS title;",
+    "create": "CREATE TABLE title (id TINYINT NOT NULL AUTO_INCREMENT, name VARCHAR(10) NOT NULL, PRIMARY KEY (id));",
+    "insert": "INSERT INTO title VALUES ?",
+    "records": [
+      [
+        1,
+        "Mr."
+      ],
+      [
+        2,
+        "Mrs."
+      ],
+      [
+        3,
+        "Miss"
+      ],
+      [
+        4,
+        "Dr."
+      ],
+      [
+        5,
+        "Ms."
+      ],
+      [
+        6,
+        "Prof."
+      ],
+      [
+        7,
+        "Rev."
+      ]
+    ]
+  },
+  {
     "sourceTableName": "empTraining",
     "destinationTableName": "tracking",
     "isDone": false,
