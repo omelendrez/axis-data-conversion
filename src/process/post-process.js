@@ -160,9 +160,6 @@ const convertData = () => {
     // await mySql.query(
     //   'UPDATE training t SET start = DATE_ADD(start, INTERVAL 1 DAY), expiry = DATE_ADD(expiry, INTERVAL 1 DAY);'
     // )
-    // await mySql.query(
-    //   'UPDATE training SET issued=DATE_ADD(end, INTERVAL 1 DAY);'
-    // )
 
     console.log(
       '- Update training status, empty course end date and certificate issued date fields.'
@@ -172,6 +169,10 @@ const convertData = () => {
     )
     await mySql.query(
       'UPDATE training t SET status = (SELECT MAX(tr.status) FROM tracking tr WHERE tr.training = t.id);'
+    )
+
+    await mySql.query(
+      'UPDATE training SET issued=DATE_ADD(end, INTERVAL 1 DAY);'
     )
 
     console.log('- Set opito_file in training records')
