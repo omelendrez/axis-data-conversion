@@ -80,6 +80,12 @@ const convertData = () => {
       "UPDATE learner SET first_name = SUBSTRING_INDEX(first_name, ' ', 1) WHERE SUBSTRING_INDEX(first_name, ' ', 1) <> SUBSTRING_INDEX(first_name, ' ', -1);"
     )
 
+    console.log(' - Set learner title')
+
+    await mySql.query(
+      "UPDATE learner SET title = CASE WHEN sex = 'M' THEN 1 ELSE 2 END;"
+    )
+
     console.log('- Update missing type in learners')
     await mySql.query('UPDATE learner SET type="TRN" WHERE type="";')
 
