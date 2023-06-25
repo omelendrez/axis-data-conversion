@@ -16,6 +16,7 @@ function convert(t) {
 
       const fields = t.fields.map((f) => f.source).join(',')
       const query = `SELECT ${fields} FROM ${process.env.MSSQL_DATABASE}.dbo.${t.sourceTableName}`
+      console.log(query)
       const result = await sql.query(query)
 
       const actions = ['drop', 'create', 'index']

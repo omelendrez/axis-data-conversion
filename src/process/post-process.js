@@ -152,21 +152,19 @@ const convertData = () => {
       'DELETE FROM course_item_rel WHERE course NOT IN (SELECT id FROM course);'
     )
 
-    console.log(
-      '- Update training status, empty course end date and certificate issued date fields.'
-    )
+    console.log('- Update training status, empty course end date fields.')
+    // await mySql.query(
+    //   'UPDATE training t SET start = DATE_ADD(start, INTERVAL 1 DAY), expiry = DATE_ADD(expiry, INTERVAL 1 DAY);;'
+    // )
     await mySql.query(
-      'UPDATE training t SET start = DATE_ADD(start, INTERVAL 1 DAY), expiry = DATE_ADD(expiry, INTERVAL 1 DAY);;'
-    )
-    await mySql.query(
-      'UPDATE training t INNER JOIN course c ON c.id = t.course SET end=DATE_ADD(t.start, INTERVAL c.duration-1 day);'
+      'UPDATE training t INNER JOIN course c ON c.id = t.course SET end=DATE_ADD(t.start, INTERVAL c.duration-1 day) WHERE end IS NULL;'
     )
     await mySql.query(
       'UPDATE training t SET status = (SELECT MAX(tr.status) FROM tracking tr WHERE tr.training = t.id);;'
     )
-    await mySql.query(
-      'UPDATE training SET issued=DATE_ADD(end, INTERVAL 1 DAY);'
-    )
+    // await mySql.query(
+    //   'UPDATE training SET issued=DATE_ADD(end, INTERVAL 1 DAY);'
+    // )
 
     console.log('- Set opito_file in training records')
     await mySql.query(

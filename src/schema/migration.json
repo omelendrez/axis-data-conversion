@@ -115,11 +115,11 @@
         "destination": "course"
       },
       {
-        "source": "Starting",
+        "source": "CONVERT(VARCHAR, Starting, 120)",
         "destination": "start"
       },
       {
-        "source": "Ending",
+        "source": "CONVERT(VARCHAR, Ending, 120)",
         "destination": "expiry"
       },
       {
@@ -331,12 +331,12 @@
         "destination": "id"
       },
       {
-        "source": "generated",
+        "source": "CONVERT(VARCHAR, generated, 120)",
         "destination": "created"
       }
     ],
     "drop": "DROP TABLE IF EXISTS opito;",
-    "create": "CREATE TABLE opito (id INT NOT NULL, created DATETIME DEFAULT NOW(), PRIMARY KEY (id));",
+    "create": "CREATE TABLE opito (id INT NOT NULL, created DATETIME, PRIMARY KEY (id));",
     "insert": "INSERT INTO opito VALUES ?"
   },
   {
@@ -385,7 +385,7 @@
         "destination": "nationality"
       },
       {
-        "source": "bdate",
+        "source": "CONVERT(VARCHAR, bdate, 120)",
         "destination": "birth_date"
       },
       {
