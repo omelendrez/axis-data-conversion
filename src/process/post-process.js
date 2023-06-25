@@ -177,7 +177,7 @@ const convertData = () => {
 
     console.log('- Set opito_file in training records')
     await mySql.query(
-      "UPDATE training t INNER JOIN opito o ON t.id = o.id SET opito_file = LOWER(HEX(CAST(DATE_FORMAT(o.created, '%H%i%d%m%Y') AS UNSIGNED)));"
+      "UPDATE training t INNER JOIN opito o ON t.id = o.id SET opito_file = LOWER(HEX(CAST(DATE_FORMAT(o.created, '%Y%m%d') AS UNSIGNED)));"
     )
 
     console.log('- Remove legacy opito table.')
