@@ -226,17 +226,13 @@
         "destination": "cert_type"
       },
       {
-        "source": "CertIDCard",
-        "destination": "cert_id_card"
-      },
-      {
         "source": "opito_registration_code",
         "destination": "opito_reg_code",
         "trim": true
       }
     ],
     "drop": "DROP TABLE IF EXISTS course;",
-    "create": "CREATE TABLE course (id SMALLINT NOT NULL AUTO_INCREMENT, code CHAR(3) NOT NULL, name VARCHAR(60), front_id VARCHAR(45), back_id VARCHAR(45), id_card TINYINT, duration TINYINT, validity TINYINT, cert_type TINYINT, cert_id_card TINYINT, opito_reg_code VARCHAR(4), PRIMARY KEY (id));",
+    "create": "CREATE TABLE course (id SMALLINT NOT NULL AUTO_INCREMENT, code CHAR(3) NOT NULL, name VARCHAR(60), front_id VARCHAR(45), back_id VARCHAR(45), id_card TINYINT, duration TINYINT, validity TINYINT, cert_type TINYINT, opito_reg_code VARCHAR(4), PRIMARY KEY (id));",
     "insert": "INSERT INTO course VALUES ?",
     "index": "ALTER TABLE course ADD INDEX course_code_idx (code ASC) VISIBLE;"
   },
