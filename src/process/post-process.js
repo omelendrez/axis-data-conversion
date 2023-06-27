@@ -233,11 +233,15 @@ const convertData = () => {
     console.log('- Update training finance status.')
     await mySql.query('UPDATE training SET finance_status=1;')
 
-    console.log('- Create tiggers.')
     const triggersPath = path.join(__dirname, '..', 'schema', 'triggers')
     await fs.readdirSync(triggersPath).map(async (fileName) => {
       const fullPath = path.join(triggersPath, fileName)
       const file = await require(fullPath)
+
+      const displayTrigger = fileName.split('.')[0].split('_').join(' ')
+
+      console.log(`- Create trigger ${displayTrigger}.`)
+
       const query = file?.query
       if (query) {
         await mySql.query(query)
