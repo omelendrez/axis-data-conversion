@@ -183,6 +183,16 @@ const convertData = () => {
     console.log('- Remove legacy opito table.')
     await mySql.query('DROP TABLE IF EXISTS opito;')
 
+    console.log('- Create attendance table')
+
+    await mySql.query('DROP TABLE IF EXISTS training_attendance')
+    await mySql.query(
+      'CREATE TABLE training_attendance (training INT NOT NULL, date DATE NOT NULL, signature_file VARCHAR(11));'
+    )
+    await mySql.query(
+      'ALTER TABLE training_attendance ADD INDEX training_attendance_training_idx (training ASC, date ASC) VISIBLE;'
+    )
+
     console.log('- Create classroom table.')
     await mySql.query('DROP TABLE IF EXISTS classroom;')
     await mySql.query(
