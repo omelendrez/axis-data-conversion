@@ -134,7 +134,7 @@
     "isInsert": true,
     "drop": "DROP TABLE IF EXISTS tracking;",
     "create": "CREATE TABLE tracking (id INT NOT NULL AUTO_INCREMENT, training INT, status TINYINT NOT NULL, user SMALLINT, updated DATETIME DEFAULT NOW(), PRIMARY KEY (id));",
-    "index": "ALTER TABLE tracking ADD INDEX tracking_training_idx (training ASC) VISIBLE;ALTER TABLE tracking ADD INDEX tracking_updated_idx (updated ASC) VISIBLE;",
+    "index": "ALTER TABLE tracking ADD INDEX tracking_training_status_idx (training ASC, status ASC) VISIBLE;",
     "insert": "INSERT INTO tracking (training, status, user, updated) VALUES ?",
     "fields": [
       {

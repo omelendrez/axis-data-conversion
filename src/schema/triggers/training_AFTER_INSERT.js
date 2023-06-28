@@ -1,7 +1,9 @@
 module.exports.query = `CREATE TRIGGER training_AFTER_INSERT
 AFTER
 INSERT
-    ON training FOR EACH ROW BEGIN DECLARE learners_count tinyint default 0;
+    ON training FOR EACH ROW BEGIN
+
+DECLARE learners_count tinyint default 0;
 
 DECLARE classroom_id INT default 0;
 
@@ -46,6 +48,5 @@ SET
     learners = learners_count
 WHERE
     id = classroom_id;
-
 END
 `

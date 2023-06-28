@@ -1,30 +1,35 @@
 module.exports.query = `CREATE TRIGGER tracking_BEFORE_INSERT BEFORE INSERT ON tracking FOR EACH ROW BEGIN
-DECLARE fromDate DATE;
-DECLARE	toDate DATE;
-DECLARE curDate DATE;
-DECLARE fileName VARCHAR(12);
-DECLARE training INT;
+DECLARE from_date DATE;
+DECLARE	to_date DATE;
+DECLARE cur_date DATE;
+DECLARE training_id INT;
 
-SET training = NEW.training;
+SET training_id = NEW.training;
 
 IF NEW.status = 4 THEN
 
-    SELECT start, end
-    INTO fromDate, toDate
-    FROM training
-    WHERE id = NEW.training;
+    SELECT
+        start, end
+    INTO
+        from_date, to_date
+    FROM
+        training
+    WHERE
+        id = NEW.training;
 
-    SET curDate = fromDate;
+    SET
+        cur_date = from_date;
 
-    WHILE curDate <= toDate DO
-        SET fileName = LOWER(CONCAT(HEX(CAST(DATE_FORMAT(curDate, '%Y%m%d') as UNSIGNED)),'.pdf'));
+  WHILE cur_date <= to_date DO
+    INSERT INTO
+        training_attendance (training, date, signature_file)
+    VALUES
+        (training_id, cur_date, '');
 
-        IF NOT EXISTS (SELECT 1 FROM training_attendance WHERE training = training AND date = curDate) THEN
-            INSERT INTO training_attendance (training, date, signature_file) VALUES (training, curDate, fileName);
-        END IF;
+  SET
+    cur_date = DATE_ADD(cur_date, INTERVAL 1 DAY);
 
-        SET curDate = DATE_ADD(curDate, INTERVAL 1 DAY);
-    END WHILE;
+  END WHILE;
 
 END IF;
 END`

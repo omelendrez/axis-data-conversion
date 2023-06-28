@@ -4,6 +4,7 @@ const path = require('path')
 const mysql = require('../mysql/mysql-connect')
 const countries = require('../schema/countries.json')
 const countryErrors = require('../schema/countryErrors.json')
+const { writePercent } = require('./../helpers')
 
 const updateLearners = () => {
   return new Promise(async (resolve, reject) => {
@@ -249,6 +250,62 @@ const convertData = () => {
         console.log(`Couldn't load file ${fullPath}`)
       }
     })
+
+    console.log(
+      '- Create procedure that generates attendance from existing records.'
+    )
+
+    const spsPath = path.join(__dirname, '..', 'schema', 'stored_procedures')
+    await fs.readdirSync(spsPath).map(async (fileName) => {
+      const fullPath = path.join(spsPath, fileName)
+      const file = await require(fullPath)
+
+      const query = file?.query
+
+      if (query) {
+        await mySql.query(query)
+      } else {
+        console.log(`Couldn't load file ${fullPath}`)
+      }
+    })
+
+    const query = 'SELECT COUNT(1) records FROM training;'
+
+    const [res] = await mySql.query(query)
+
+    const totalTrainingRecs = res[0].records
+
+    console.log(`- Training records to process: ${totalTrainingRecs}`)
+
+    console.log('- Execute stored procedure')
+
+    let processed = 1000
+    let last_training_id = 0
+    do {
+      const query = `call generate_legacy_attendance(${last_training_id})`
+
+      writePercent(Math.round((processed / totalTrainingRecs) * 100))
+
+      const [res] = await mySql.query(query)
+      last_training_id = await res[0][0].training_id
+
+      processed += 1000
+    } while (typeof last_training_id === 'number' && isFinite(last_training_id))
+
+    mySql.query('DROP PROCEDURE IF EXISTS generate_legacy_attendance;')
+
+    writePercent(100)
+
+    const query2 = 'SELECT COUNT(1) records FROM training_attendance;'
+    const [res2] = await mySql.query(query2)
+
+    const totalTrainingAttendanceRecords = res2[0].records
+
+    console.log()
+
+    console.log(
+      `- Training attendance records generated: ${totalTrainingAttendanceRecords}`
+    )
 
     console.log('- Create user/role relationship table.')
     await mySql.query('DROP TABLE IF EXISTS user_role')

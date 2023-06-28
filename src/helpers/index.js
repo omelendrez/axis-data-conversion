@@ -1,3 +1,5 @@
+const readline = require('readline')
+
 function formatConsole(msg) {
   const bold = '\033[1;97m'
   const reset = '\033[0m'
@@ -5,4 +7,9 @@ function formatConsole(msg) {
   return result
 }
 
-module.exports = { formatConsole }
+function writePercent(p) {
+  readline.cursorTo(process.stdout, 0)
+  process.stdout.write(`- Processing ... ${p}%`)
+}
+
+module.exports = { formatConsole, writePercent }
