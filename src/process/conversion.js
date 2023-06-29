@@ -1,17 +1,14 @@
 const mssql = require('../mssql/mssql-connect')
-const mysql = require('../mysql/mysql-connect')
+const mysqlpool = require('../mysql/mysql-connect')
 const bcrypt = require('bcrypt')
 
 const { formatConsole } = require('../helpers')
 
 const execute = (t) => {
   return new Promise(async (resolve, reject) => {
-    const mySql = await mysql.connect()
+    const mySql = await mysqlpool
 
     try {
-      const db = process.env.MYSQL_DATABASE || 'axis'
-      await mySql.query(`USE ${db};`)
-
       const actions = ['drop', 'create', 'index']
       let statement = ''
 
@@ -44,22 +41,15 @@ const execute = (t) => {
     } catch (err) {
       console.dir(err)
       reject(err)
-    } finally {
-      mySql.end()
     }
   })
 }
 
 const updateTrainingStatus = (t) => {
   return new Promise(async (resolve, reject) => {
-    const mySql = await mysql.connect()
+    const mySql = await mysqlpool
 
     try {
-      const sql = await mssql.connect()
-
-      const db = process.env.MYSQL_DATABASE || 'axis'
-      await mySql.query(`USE ${db};`)
-
       const fields = t.fields.map((f) => f.source).join(',')
       const query = `SELECT ${fields} FROM ${process.env.MSSQL_DATABASE}.dbo.${t.sourceTableName}`
 
@@ -94,20 +84,15 @@ const updateTrainingStatus = (t) => {
     } catch (err) {
       console.dir(err)
       reject(err)
-    } finally {
-      mySql.end()
     }
   })
 }
 
 const secureUserPasswords = async (t) => {
   return await new Promise(async (resolve, reject) => {
-    const mySql = await mysql.connect()
+    const mySql = await mysqlpool
 
     try {
-      const db = process.env.MYSQL_DATABASE || 'axis'
-      await mySql.query(`USE ${db};`)
-
       console.log(formatConsole(t.title))
 
       let updated = 0
@@ -136,22 +121,17 @@ const secureUserPasswords = async (t) => {
     } catch (error) {
       console.dir(error)
       reject(error)
-    } finally {
-      // mySql.end()
     }
   })
 }
 
 const addTracking = (t) => {
   return new Promise(async (resolve, reject) => {
-    const mySql = await mysql.connect()
+    const sql = await mssql.connect()
+
+    const mySql = await mysqlpool
 
     try {
-      const sql = await mssql.connect()
-
-      const db = process.env.MYSQL_DATABASE || 'axis'
-      await mySql.query(`USE ${db};`)
-
       const actions = ['drop', 'create', 'index']
       let statement = ''
 
@@ -214,20 +194,15 @@ const addTracking = (t) => {
     } catch (err) {
       console.dir(err)
       reject(err)
-    } finally {
-      mySql.end()
     }
   })
 }
 
 const executeProcedure = async (t) => {
   return new Promise(async (resolve, reject) => {
-    const mySql = await mysql.connect()
+    const mySql = await mysqlpool
 
     try {
-      const db = process.env.MYSQL_DATABASE || 'axis'
-      await mySql.query(`USE ${db};`)
-
       let updatedRows = 0
 
       await Promise.all(
@@ -251,8 +226,6 @@ const executeProcedure = async (t) => {
     } catch (err) {
       console.dir(err)
       reject(err)
-    } finally {
-      mySql.end()
     }
   })
 }

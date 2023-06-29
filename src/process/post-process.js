@@ -1,19 +1,19 @@
 require('dotenv').config()
 const fs = require('fs')
 const path = require('path')
-const mysql = require('../mysql/mysql-connect')
+const mysqlpool = require('../mysql/mysql-connect')
 const countries = require('../schema/countries.json')
 const countryErrors = require('../schema/countryErrors.json')
 const { writePercent } = require('./../helpers')
 
-const updateLearners = () => {
+const updateLearners = async () => {
+  const mySql = await mysqlpool
+
   return new Promise(async (resolve, reject) => {
     console.log(
       '- Creating learner nationalities table with all matching and not matching records.'
     )
-    const mySql = await mysql.connect()
-    const db = 'axis'
-    await mySql.query(`USE ${db};`)
+
     const [res] = await mySql.query(
       'SELECT t.id, n.name, t.nationality FROM learner t INNER JOIN nationality n ON t.nationality = n.code;'
     )
@@ -38,19 +38,19 @@ const updateLearners = () => {
     })
 
     await mySql.query('INSERT INTO nationalities VALUES ?', [records])
-    await mySql.end()
+
     resolve()
   })
 }
 
-const createTable = () => {
+const createTable = async () => {
+  const mySql = await mysqlpool
+
   return new Promise(async (resolve, reject) => {
     console.log(
       '- Creating new table nationality2 with the ISO standard list of countries.'
     )
-    const mySql = await mysql.connect()
-    const db = 'axis'
-    await mySql.query(`USE ${db};`)
+
     await mySql.query('DROP TABLE IF EXISTS nationality2;')
     await mySql.query(
       'CREATE TABLE nationality2 (id SMALLINT NOT NULL AUTO_INCREMENT,code CHAR(3), country VARCHAR(100), nationality VARCHAR(100) NOT NULL, PRIMARY KEY (id));'
@@ -62,17 +62,15 @@ const createTable = () => {
     })
 
     await mySql.query('INSERT INTO nationality2 VALUES ?', [records])
-    await mySql.end()
+
     resolve()
   })
 }
 
-const convertData = () => {
-  return new Promise(async (resolve, reject) => {
-    const mySql = await mysql.connect()
-    const db = 'axis'
-    await mySql.query(`USE ${db};`)
+const convertData = async () => {
+  const mySql = await mysqlpool
 
+  return new Promise(async (resolve, reject) => {
     console.log("- Splipt learner's first_name into first and middle names")
     await mySql.query(
       "UPDATE learner SET middle_name = SUBSTRING_INDEX(first_name, ' ', -1) WHERE SUBSTRING_INDEX(first_name, ' ', 1) <> SUBSTRING_INDEX(first_name, ' ', -1);"
@@ -234,23 +232,6 @@ const convertData = () => {
     console.log('- Update training finance status.')
     await mySql.query('UPDATE training SET finance_status=1;')
 
-    const triggersPath = path.join(__dirname, '..', 'schema', 'triggers')
-    await fs.readdirSync(triggersPath).map(async (fileName) => {
-      const fullPath = path.join(triggersPath, fileName)
-      const file = await require(fullPath)
-
-      const displayTrigger = fileName.split('.')[0].split('_').join(' ')
-
-      console.log(`- Create trigger ${displayTrigger}.`)
-
-      const query = file?.query
-      if (query) {
-        await mySql.query(query)
-      } else {
-        console.log(`Couldn't load file ${fullPath}`)
-      }
-    })
-
     console.log(
       '- Create procedure that generates attendance from existing records.'
     )
@@ -295,13 +276,30 @@ const convertData = () => {
     mySql.query('DROP PROCEDURE IF EXISTS generate_legacy_attendance;')
 
     writePercent(100)
+    console.log()
 
     const query2 = 'SELECT COUNT(1) records FROM training_attendance;'
     const [res2] = await mySql.query(query2)
 
     const totalTrainingAttendanceRecords = res2[0].records
 
-    console.log()
+    const triggersPath = path.join(__dirname, '..', 'schema', 'triggers')
+
+    await fs.readdirSync(triggersPath).map(async (fileName) => {
+      const fullPath = path.join(triggersPath, fileName)
+      const file = await require(fullPath)
+
+      const displayTrigger = fileName.split('.')[0].split('_').join(' ')
+
+      console.log(`- Create trigger ${displayTrigger}.`)
+
+      const query = file?.query
+      if (query) {
+        await mySql.query(query)
+      } else {
+        console.log(`Couldn't load file ${fullPath}`)
+      }
+    })
 
     console.log(
       `- Training attendance records generated: ${totalTrainingAttendanceRecords}`
@@ -325,7 +323,6 @@ const convertData = () => {
       'INSERT INTO user_role (user, role) VALUES (95,1), (1023,1);'
     )
 
-    mySql.end()
     resolve()
   })
 }
