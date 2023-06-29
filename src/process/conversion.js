@@ -155,7 +155,7 @@ const addTracking = (t) => {
       const actions = ['drop', 'create', 'index']
       let statement = ''
 
-      console.log(formatConsole('tracking'))
+      console.log(formatConsole('training_tracking'))
 
       actions.forEach((a) => {
         statement += t[a] ? t[a] : ''

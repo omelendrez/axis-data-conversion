@@ -1,4 +1,4 @@
-module.exports.query = `CREATE TRIGGER tracking_BEFORE_INSERT BEFORE INSERT ON tracking FOR EACH ROW BEGIN
+module.exports.query = `CREATE TRIGGER tracking_BEFORE_INSERT BEFORE INSERT ON training_tracking FOR EACH ROW BEGIN
 DECLARE from_date DATE;
 DECLARE	to_date DATE;
 DECLARE cur_date DATE;

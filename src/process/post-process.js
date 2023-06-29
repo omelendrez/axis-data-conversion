@@ -169,7 +169,7 @@ const convertData = () => {
       'UPDATE training t INNER JOIN course c ON c.id = t.course SET end=DATE_ADD(t.start, INTERVAL c.duration-1 DAY) WHERE end IS NULL;'
     )
     await mySql.query(
-      'UPDATE training t SET status = (SELECT MAX(tr.status) FROM tracking tr WHERE tr.training = t.id);'
+      'UPDATE training t SET status = (SELECT MAX(tr.status) FROM training_tracking tr WHERE tr.training = t.id);'
     )
 
     await mySql.query(

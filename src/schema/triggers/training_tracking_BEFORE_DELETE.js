@@ -1,6 +1,6 @@
 module.exports.query = `CREATE TRIGGER tracking_BEFORE_DELETE
 BEFORE
-  DELETE ON tracking FOR EACH ROW BEGIN
+  DELETE ON training_tracking FOR EACH ROW BEGIN
 
 	DECLARE training_id INT;
 

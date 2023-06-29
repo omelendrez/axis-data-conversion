@@ -1,4 +1,4 @@
-module.exports.query = `CREATE TRIGGER tracking_AFTER_INSERT AFTER INSERT ON tracking FOR EACH ROW BEGIN
+module.exports.query = `CREATE TRIGGER tracking_AFTER_INSERT AFTER INSERT ON training_tracking FOR EACH ROW BEGIN
 
 DECLARE NEW_STATUS SMALLINT;
 
@@ -7,7 +7,7 @@ SELECT
 INTO
   NEW_STATUS
 FROM
-  tracking
+  training_tracking
 WHERE
   training = NEW.training;
 

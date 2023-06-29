@@ -1,4 +1,4 @@
-module.exports.query = `CREATE TRIGGER tracking_AFTER_DELETE AFTER DELETE ON tracking FOR EACH ROW BEGIN
+module.exports.query = `CREATE TRIGGER tracking_AFTER_DELETE AFTER DELETE ON training_tracking FOR EACH ROW BEGIN
 
   DECLARE NEW_STATUS SMALLINT;
 
@@ -7,7 +7,7 @@ module.exports.query = `CREATE TRIGGER tracking_AFTER_DELETE AFTER DELETE ON tra
   INTO
     NEW_STATUS
   FROM
-    tracking
+    training_tracking
   WHERE
     training = OLD.training;
 

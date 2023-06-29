@@ -12,7 +12,7 @@ select
   k.updated tracking_updated
 from
   training t
-  inner join tracking k on t.id = k.training
+  inner join training_tracking k on t.id = k.training
   inner join status s on t.status = s.id
   inner join status s2 on k.status = s2.id
   inner join course c on t.course = c.code
