@@ -21,6 +21,8 @@ async function run() {
     let tables = 0
     let updatedRecords = 0
 
+    await Promise.all([data.init()])
+
     await Promise.all(
       migrationSchemas
         .filter((t) => !t.isDone)

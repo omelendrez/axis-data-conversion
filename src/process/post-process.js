@@ -210,6 +210,10 @@ const convertData = async () => {
       'CREATE TABLE course_assesment (id SMALLINT NOT NULL AUTO_INCREMENT, name VARCHAR(60), PRIMARY KEY (id));'
     )
 
+    await mySql.query(
+      'INSERT INTO course_assesment VALUES(1, "Generic assesment");'
+    )
+
     console.log('- Create course/assesments relationship table.')
 
     mySql.query('DROP TABLE IF EXISTS course_assesment_rel;')

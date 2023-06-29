@@ -1,7 +1,38 @@
 const mssql = require('../mssql/mssql-connect')
 const mysqlpool = require('../mysql/mysql-connect')
+const fs = require('fs')
+const path = require('path')
 
 const { formatConsole } = require('../helpers')
+
+function init() {
+  return new Promise(async (resolve, reject) => {
+    const mySql = await mysqlpool
+
+    try {
+      const functionsPath = path.join(__dirname, '..', 'schema', 'functions')
+
+      await fs.readdirSync(functionsPath).map(async (fileName) => {
+        const fullPath = path.join(functionsPath, fileName)
+        const file = await require(fullPath)
+
+        const displayFunction = fileName.split('.')[0]
+
+        console.log(`- Create function ${displayFunction}.`)
+
+        const query = file?.query
+        if (query) {
+          await mySql.query(query)
+          resolve()
+        } else {
+          const message = `Couldn't load file ${fullPath}`
+          console.log(message)
+          reject(message)
+        }
+      })
+    } catch (error) {}
+  })
+}
 
 function convert(t) {
   return new Promise(async (resolve, reject) => {
@@ -65,4 +96,4 @@ function convert(t) {
   })
 }
 
-module.exports = { convert }
+module.exports = { init, convert }

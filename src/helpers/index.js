@@ -7,9 +7,9 @@ function formatConsole(msg) {
   return result
 }
 
-function writePercent(p) {
+const writePercent = (percent) => {
   readline.cursorTo(process.stdout, 0)
-  process.stdout.write(`- Processing ... ${p}%`)
+  process.stdout.write(`- Processing ... ${percent}%`)
 }
 
 module.exports = { formatConsole, writePercent }
