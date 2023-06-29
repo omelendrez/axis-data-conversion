@@ -129,13 +129,13 @@
   },
   {
     "sourceTableName": "empTraining",
-    "destinationTableName": "tracking",
+    "destinationTableName": "training_tracking",
     "isDone": false,
     "isInsert": true,
-    "drop": "DROP TABLE IF EXISTS tracking;",
-    "create": "CREATE TABLE tracking (id INT NOT NULL AUTO_INCREMENT, training INT, status TINYINT NOT NULL, user SMALLINT, updated DATETIME DEFAULT NOW(), PRIMARY KEY (id));",
-    "index": "ALTER TABLE tracking ADD INDEX tracking_training_status_idx (training ASC, status ASC) VISIBLE;",
-    "insert": "INSERT INTO tracking (training, status, user, updated) VALUES ?",
+    "drop": "DROP TABLE IF EXISTS training_tracking;",
+    "create": "CREATE TABLE training_tracking (id INT NOT NULL AUTO_INCREMENT, training INT, status TINYINT NOT NULL, user SMALLINT, updated DATETIME DEFAULT NOW(), PRIMARY KEY (id));",
+    "index": "ALTER TABLE training_tracking ADD INDEX training_tracking_training_status_idx (training ASC, status ASC) VISIBLE;",
+    "insert": "INSERT INTO training_tracking (training, status, user, updated) VALUES ?",
     "fields": [
       {
         "date": "Updated",
