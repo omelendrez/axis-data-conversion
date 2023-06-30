@@ -14,7 +14,7 @@ module.exports.query = `CREATE TRIGGER tracking_AFTER_DELETE AFTER DELETE ON tra
   UPDATE
     training
   SET
-    status = NEW_STATUS
+    status = CASE WHEN NEW_STATUS IS NULL THEN 0 ELSE NEW_STATUS END
   WHERE
     id = OLD.training;
 

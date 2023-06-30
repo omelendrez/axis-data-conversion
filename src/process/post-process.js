@@ -159,7 +159,10 @@ const convertData = async () => {
     // await mySql.query(
     //   'UPDATE training t SET start = DATE_ADD(start, INTERVAL 1 DAY), expiry = DATE_ADD(expiry, INTERVAL 1 DAY);'
     // )
-
+    console.log('- Change training course field from char to smallint.')
+    await mySql.query(
+      'ALTER TABLE training CHANGE COLUMN course course SMALLINT NOT NULL;'
+    )
     console.log(
       '- Update training status, empty course end date and certificate issued date fields.'
     )
