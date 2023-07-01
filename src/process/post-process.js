@@ -121,6 +121,18 @@ const convertData = async () => {
     await mySql.query('ALTER TABLE company DROP INDEX company_code_idx;')
     await mySql.query('ALTER TABLE company DROP COLUMN code;')
 
+    console.log(
+      '- Set learner company to "2696 * UNDEFINED *" when company is null.'
+    )
+    await mySql.query(
+      'UPDATE learner SET company = 2696 WHERE company IS NULL;'
+    )
+
+    console.log('- Change learner company field type from varchar to smallint.')
+    await mySql.query(
+      'ALTER TABLE learner CHANGE COLUMN company company SMALLINT NOT NULL;'
+    )
+
     console.log('- Delete training records with wrong or empty course code.')
     await mySql.query(
       'DELETE FROM training WHERE course NOT IN (SELECT id FROM course);'
@@ -159,10 +171,11 @@ const convertData = async () => {
     // await mySql.query(
     //   'UPDATE training t SET start = DATE_ADD(start, INTERVAL 1 DAY), expiry = DATE_ADD(expiry, INTERVAL 1 DAY);'
     // )
-    console.log('- Change training course field from char to smallint.')
+    console.log('- Change training course field type from char to smallint.')
     await mySql.query(
       'ALTER TABLE training CHANGE COLUMN course course SMALLINT NOT NULL;'
     )
+
     console.log(
       '- Update training status, empty course end date and certificate issued date fields.'
     )
@@ -189,7 +202,7 @@ const convertData = async () => {
 
     await mySql.query('DROP TABLE IF EXISTS training_attendance')
     await mySql.query(
-      'CREATE TABLE training_attendance (training INT NOT NULL, date DATE NOT NULL, signature_file VARCHAR(11));'
+      'CREATE TABLE training_attendance (training INT NOT NULL, date DATE NOT NULL, signature_file VARCHAR(100));'
     )
     await mySql.query(
       'ALTER TABLE training_attendance ADD INDEX training_attendance_training_idx (training ASC, date ASC) VISIBLE;'
@@ -210,7 +223,7 @@ const convertData = async () => {
 
     await mySql.query('DROP TABLE IF EXISTS course_assesment;')
     await mySql.query(
-      'CREATE TABLE course_assesment (id SMALLINT NOT NULL AUTO_INCREMENT, name VARCHAR(60), PRIMARY KEY (id));'
+      'CREATE TABLE course_assesment (id SMALLINT NOT NULL AUTO_INCREMENT, name VARCHAR(100), PRIMARY KEY (id));'
     )
 
     await mySql.query(

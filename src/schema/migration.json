@@ -30,7 +30,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS user;",
-    "create": "CREATE TABLE user (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(45) NOT NULL, full_name VARCHAR(45), password VARCHAR(60), email VARCHAR(45), status TINYINT NOT NULL, PRIMARY KEY (id));",
+    "create": "CREATE TABLE user (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(100) NOT NULL, full_name VARCHAR(100), password VARCHAR(100), email VARCHAR(100), status TINYINT NOT NULL, PRIMARY KEY (id));",
     "insert": "INSERT INTO user (id, name, full_name, password, email, status) VALUES ?"
   },
   {
@@ -48,7 +48,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS contact_type;",
-    "create": "CREATE TABLE contact_type (id TINYINT NOT NULL AUTO_INCREMENT, name VARCHAR(45) NOT NULL, PRIMARY KEY (id));",
+    "create": "CREATE TABLE contact_type (id TINYINT NOT NULL AUTO_INCREMENT, name VARCHAR(100) NOT NULL, PRIMARY KEY (id));",
     "insert": "INSERT INTO contact_type VALUES ?"
   },
   {
@@ -75,7 +75,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS contact_info;",
-    "create": "CREATE TABLE contact_info (id INT NOT NULL AUTO_INCREMENT, learner INT NOT NULL, type TINYINT NOT NULL, value VARCHAR(60), PRIMARY KEY (id));",
+    "create": "CREATE TABLE contact_info (id INT NOT NULL AUTO_INCREMENT, learner INT NOT NULL, type TINYINT NOT NULL, value VARCHAR(100), PRIMARY KEY (id));",
     "insert": "INSERT INTO contact_info VALUES ?",
     "index": "ALTER TABLE contact_info ADD INDEX contact_info_learner_idx (learner ASC) VISIBLE;"
   },
@@ -94,7 +94,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS state;",
-    "create": "CREATE TABLE state (id SMALLINT NOT NULL AUTO_INCREMENT, name VARCHAR(45) NOT NULL, PRIMARY KEY (id));",
+    "create": "CREATE TABLE state (id SMALLINT NOT NULL AUTO_INCREMENT, name VARCHAR(100) NOT NULL, PRIMARY KEY (id));",
     "insert": "INSERT INTO state VALUES ?"
   },
   {
@@ -132,7 +132,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS training;",
-    "create": "CREATE TABLE training (id INT NOT NULL AUTO_INCREMENT, learner INT NOT NULL, course CHAR(6) NOT NULL, start DATE NOT NULL, end DATE, issued DATE, expiry DATE, certificate VARCHAR(30), status TINYINT DEFAULT 0, finance_status TINYINT DEFAULT NULL, opito_file VARCHAR(7) DEFAULT '', PRIMARY KEY (id));",
+    "create": "CREATE TABLE training (id INT NOT NULL AUTO_INCREMENT, learner INT NOT NULL, course CHAR(6) NOT NULL, start DATE NOT NULL, end DATE, issued DATE, expiry DATE, certificate VARCHAR(100), status TINYINT DEFAULT 1, finance_status TINYINT DEFAULT NULL, opito_file VARCHAR(100) DEFAULT '', PRIMARY KEY (id));",
     "insert": "INSERT INTO training (id,learner,course,start,expiry,certificate,status) VALUES ?",
     "index": "ALTER TABLE training ADD INDEX training_learner_idx (learner ASC) VISIBLE;ALTER TABLE training ADD INDEX training_course_start_idx (course ASC, start ASC) VISIBLE;ALTER TABLE training ADD INDEX training_status_idx (status ASC) VISIBLE;"
   },
@@ -159,7 +159,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS company;",
-    "create": "CREATE TABLE company (id INT NOT NULL AUTO_INCREMENT, code VARCHAR(6) NOT NULL, name VARCHAR(60) NOT NULL, status TINYINT NOT NULL, PRIMARY KEY (id));",
+    "create": "CREATE TABLE company (id INT NOT NULL AUTO_INCREMENT, code VARCHAR(100) NOT NULL, name VARCHAR(100) NOT NULL, status TINYINT NOT NULL, PRIMARY KEY (id));",
     "insert": "INSERT INTO company VALUES ?",
     "index": "ALTER TABLE company ADD INDEX company_code_idx (code ASC) VISIBLE;"
   },
@@ -232,7 +232,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS course;",
-    "create": "CREATE TABLE course (id SMALLINT NOT NULL AUTO_INCREMENT, code CHAR(3) NOT NULL, name VARCHAR(60), front_id_text VARCHAR(45), back_id_text VARCHAR(45), id_card TINYINT, duration TINYINT, validity TINYINT, cert_type TINYINT, expiry_type TINYINT DEFAULT 1, opito_reg_code VARCHAR(4), PRIMARY KEY (id));",
+    "create": "CREATE TABLE course (id SMALLINT NOT NULL AUTO_INCREMENT, code CHAR(3) NOT NULL, name VARCHAR(100), front_id_text VARCHAR(100), back_id_text VARCHAR(100), id_card TINYINT, duration TINYINT, validity TINYINT, cert_type TINYINT, expiry_type TINYINT DEFAULT 1, opito_reg_code VARCHAR(100), PRIMARY KEY (id));",
     "insert": "INSERT INTO course (id, code, name, front_id_text, back_id_text, id_card, duration, validity, cert_type, opito_reg_code)VALUES ?",
     "index": "ALTER TABLE course ADD INDEX course_code_idx (code ASC) VISIBLE;"
   },
@@ -291,7 +291,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS certificate_type;",
-    "create": "CREATE TABLE certificate_type (id CHAR(1) NOT NULL, name VARCHAR(45) NOT NULL, PRIMARY KEY (id));",
+    "create": "CREATE TABLE certificate_type (id CHAR(1) NOT NULL, name VARCHAR(100) NOT NULL, PRIMARY KEY (id));",
     "insert": "INSERT INTO certificate_type VALUES ?"
   },
   {
@@ -313,7 +313,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS nationality;",
-    "create": "CREATE TABLE nationality (id SMALLINT NOT NULL AUTO_INCREMENT, code SMALLINT NOT NULL, name VARCHAR(45) NOT NULL, PRIMARY KEY (id));",
+    "create": "CREATE TABLE nationality (id SMALLINT NOT NULL AUTO_INCREMENT, code SMALLINT NOT NULL, name VARCHAR(100) NOT NULL, PRIMARY KEY (id));",
     "insert": "INSERT INTO nationality VALUES ?",
     "index": "ALTER TABLE nationality ADD INDEX nationality_code_idx (code ASC) VISIBLE;"
   },
@@ -394,7 +394,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS learner;",
-    "create": "CREATE TABLE learner (id INT NOT NULL AUTO_INCREMENT, type CHAR(3), badge VARCHAR(10) NOT NULL, title TINYINT, first_name VARCHAR(45) NOT NULL, middle_name VARCHAR(45) DEFAULT '', last_name VARCHAR(45) NOT NULL, sex CHAR(1) NOT NULL, address_1 VARCHAR(50) DEFAULT '', address_2 VARCHAR(50) DEFAULT '', state SMALLINT, nationality SMALLINT, birth_date DATE, company VARCHAR(6), status TINYINT NOT NULL, PRIMARY KEY (id));",
+    "create": "CREATE TABLE learner (id INT NOT NULL AUTO_INCREMENT, type CHAR(3), badge VARCHAR(100) NOT NULL, title TINYINT, first_name VARCHAR(100) NOT NULL, middle_name VARCHAR(100) DEFAULT '', last_name VARCHAR(100) NOT NULL, sex CHAR(1) NOT NULL, address_1 VARCHAR(100) DEFAULT '', address_2 VARCHAR(100) DEFAULT '', state SMALLINT, nationality SMALLINT, birth_date DATE, company VARCHAR(100), status TINYINT NOT NULL, PRIMARY KEY (id));",
     "insert": "INSERT INTO learner (id, type, badge, last_name, first_name, sex, address_1, address_2, state, nationality, birth_date, company, status) VALUES ?",
     "index": "ALTER TABLE learner ADD INDEX learner_badge_idx (badge ASC) VISIBLE;"
   },
@@ -413,7 +413,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS sex;",
-    "create": "CREATE TABLE sex (id CHAR(1) NOT NULL, name VARCHAR(45) NOT NULL, PRIMARY KEY (id));",
+    "create": "CREATE TABLE sex (id CHAR(1) NOT NULL, name VARCHAR(100) NOT NULL, PRIMARY KEY (id));",
     "insert": "INSERT INTO sex VALUES ?"
   }
 ]

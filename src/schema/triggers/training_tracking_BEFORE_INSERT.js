@@ -6,7 +6,7 @@ DECLARE training_id INT;
 
 SET training_id = NEW.training;
 
-IF NEW.status = 4 THEN
+IF NEW.status = 5 THEN
 
     SELECT
         start, end

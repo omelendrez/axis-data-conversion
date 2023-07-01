@@ -15,28 +15,28 @@ BEFORE
   INTO
     training_id, training_status;
 
-  IF training_status = 3 THEN
+  IF training_status = 4 THEN
     DELETE FROM
       training_medical
     WHERE
       training = training_id;
   END IF;
 
-  IF training_status = 4 THEN
+  IF training_status = 5 THEN
     DELETE FROM
       training_attendance
     WHERE
       training = training_id;
   END IF;
 
-  IF training_status = 5 THEN
+  IF training_status = 6 THEN
     DELETE FROM
       training_assesment
     WHERE
       training = training_id;
   END IF;
 
-  IF training_status IN (3,4,5,6,7) THEN
+  IF training_status IN (4,5,6,7,8) THEN
     UPDATE
       training
     SET

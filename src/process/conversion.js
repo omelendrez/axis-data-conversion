@@ -169,11 +169,11 @@ const addTracking = (t) => {
               }
             }
           }
-          // const complete = 11
-          // if (status.length > 8 && !status.includes(complete)) {
-          //   values.push([r.ID, complete, r[f.user], r[f.date]])
-          //   status.push(complete)
-          // }
+          const complete = 12
+          if (status.length > 9 && !status.includes(complete)) {
+            values.push([r.ID, complete, r[f.user], r[f.date]])
+            status.push(complete)
+          }
         })
       })
 

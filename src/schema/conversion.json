@@ -13,77 +13,83 @@
     "destinationTableName": "status",
     "isDone": false,
     "drop": "DROP TABLE IF EXISTS status;",
-    "create": "CREATE TABLE status (id TINYINT NOT NULL AUTO_INCREMENT, status VARCHAR(45) NOT NULL, state VARCHAR(45) NOT NULL, continue_flow TINYINT, PRIMARY KEY (id));",
+    "create": "CREATE TABLE status (id TINYINT NOT NULL AUTO_INCREMENT, status VARCHAR(100) NOT NULL, state VARCHAR(100) NOT NULL, continue_flow TINYINT, PRIMARY KEY (id));",
     "insert": "INSERT INTO status VALUES ?",
     "records": [
       [
         1,
+        "New record",
+        "Waiting for Admin",
+        1
+      ],
+      [
+        2,
         "Admin done",
         "Waiting for Front desk",
         1
       ],
       [
-        2,
+        3,
         "Front desk done",
         "Waiting for Medic",
         1
       ],
       [
-        3,
+        4,
         "Medic done",
         "Waiting for T.C.",
         1
       ],
       [
-        4,
+        5,
         "T.C. done",
         "Waiting for Assesment",
         1
       ],
       [
-        5,
+        6,
         "Assesment done",
         "Waiting to QA/QC",
         1
       ],
       [
-        6,
+        7,
         "QA/QC done",
         "Waiting for Finance",
         1
       ],
       [
-        7,
+        8,
         "Finance done",
         "Waiting for MD",
         1
       ],
       [
-        8,
+        9,
         "MD done",
         "Waiting for Printer",
         1
       ],
       [
-        9,
+        10,
         "Certificate done",
         "Waiting for Opito",
         1
       ],
       [
-        10,
+        11,
         "ID done",
         "Waiting for Opito",
         1
       ],
       [
-        11,
+        12,
         "Completed",
         "Completed",
         0
       ],
       [
-        12,
+        13,
         "Cancelled",
         "Cancelled",
         0
@@ -94,7 +100,7 @@
     "destinationTableName": "title",
     "isDone": false,
     "drop": "DROP TABLE IF EXISTS title;",
-    "create": "CREATE TABLE title (id TINYINT NOT NULL AUTO_INCREMENT, name VARCHAR(10) NOT NULL, PRIMARY KEY (id));",
+    "create": "CREATE TABLE title (id TINYINT NOT NULL AUTO_INCREMENT, name VARCHAR(100) NOT NULL, PRIMARY KEY (id));",
     "insert": "INSERT INTO title VALUES ?",
     "records": [
       [
@@ -140,22 +146,22 @@
       {
         "date": "Updated",
         "user": "UpdatedBy",
-        "status": 1
+        "status": 2
       },
       {
         "date": "ApprovedOn",
         "user": "ApprovedBy",
-        "status": 8
+        "status": 9
       },
       {
         "date": "Certificate_printedOn",
         "user": "Certificate_printedBy",
-        "status": 9
+        "status": 10
       },
       {
         "date": "ID_issuedOn",
         "user": "ID_issuedBy",
-        "status": 10
+        "status": 11
       }
     ]
   },
@@ -180,7 +186,7 @@
     "destinationTableName": "role",
     "isDone": false,
     "drop": "DROP TABLE IF EXISTS role;",
-    "create": "CREATE TABLE role (id SMALLINT NOT NULL AUTO_INCREMENT, name VARCHAR(45) NOT NULL,PRIMARY KEY (id));",
+    "create": "CREATE TABLE role (id SMALLINT NOT NULL AUTO_INCREMENT, name VARCHAR(100) NOT NULL,PRIMARY KEY (id));",
     "insert": "INSERT INTO role VALUES ?",
     "records": [
       [
