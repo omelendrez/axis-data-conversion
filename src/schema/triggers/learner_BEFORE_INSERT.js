@@ -7,8 +7,16 @@ module.exports.query = `CREATE TRIGGER learner_BEFORE_INSERT BEFORE INSERT ON le
 		SET prefix = 'TR';
 	END IF;
 
-	SELECT REGEXP_REPLACE(MAX(badge), '[a-zA-Z]+', '') INTO last_badge FROM learner WHERE type=NEW.type;
-    SET new_badge = CAST(last_badge AS unsigned) + 1;
+	SELECT
+        REGEXP_REPLACE(MAX(badge), '[a-zA-Z]+', '')
+    INTO
+        last_badge
+    FROM
+        learner
+    WHERE
+        type=NEW.type;
+
+    SET new_badge = CAST(last_badge AS UNASIGNED) + 1;
     SET NEW.badge = CONCAT(prefix, REGEXP_REPLACE(CAST(new_badge AS CHAR(10)),' ',''));
 
     SET NEW.last_name = UPPER(TRIM(NEW.last_name));
