@@ -71,7 +71,7 @@ const convertData = async () => {
   const mySql = await mysqlpool
 
   return new Promise(async (resolve, reject) => {
-    console.log("- Splipt learner's first_name into first and middle names")
+    console.log("- Split learner's first_name into first and middle names")
     await mySql.query(
       "UPDATE learner SET middle_name = SUBSTRING_INDEX(first_name, ' ', -1) WHERE SUBSTRING_INDEX(first_name, ' ', 1) <> SUBSTRING_INDEX(first_name, ' ', -1);"
     )
@@ -111,6 +111,11 @@ const convertData = async () => {
     console.log('- Drop code field from course table.')
     await mySql.query('ALTER TABLE course DROP INDEX course_code_idx;')
     await mySql.query('ALTER TABLE course DROP COLUMN code;')
+
+    console.log('- Set FOET courses to require previous expiry date')
+    await mySql.query(
+      'UPDATE course SET expiry_type = 2 WHERE name like "%foet%";'
+    )
 
     console.log('- Update learner table with company id instead of code.')
     await mySql.query(
