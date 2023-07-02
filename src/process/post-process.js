@@ -298,10 +298,12 @@ const convertData = async () => {
       processed += 1000
     } while (typeof last_training_id === 'number' && isFinite(last_training_id))
 
-    mySql.query('DROP PROCEDURE IF EXISTS generate_legacy_attendance;')
-
     writePercent(100)
     console.log()
+
+    console.log('- Drop stored procedure')
+
+    mySql.query('DROP PROCEDURE IF EXISTS generate_legacy_attendance;')
 
     const query2 = 'SELECT COUNT(1) records FROM training_attendance;'
     const [res2] = await mySql.query(query2)

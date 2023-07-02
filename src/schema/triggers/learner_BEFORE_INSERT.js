@@ -16,7 +16,7 @@ module.exports.query = `CREATE TRIGGER learner_BEFORE_INSERT BEFORE INSERT ON le
     WHERE
         type=NEW.type;
 
-    SET new_badge = CAST(last_badge AS UNASIGNED) + 1;
+    SET new_badge = CAST(last_badge AS UNSIGNED) + 1;
     SET NEW.badge = CONCAT(prefix, REGEXP_REPLACE(CAST(new_badge AS CHAR(10)),' ',''));
 
     SET NEW.last_name = UPPER(TRIM(NEW.last_name));
