@@ -22,9 +22,9 @@ IF NEW.status = 5 THEN
 
   WHILE cur_date <= to_date DO
     INSERT INTO
-        training_attendance (training, date, signature_file)
+        training_attendance (training, date)
     VALUES
-        (training_id, cur_date, '');
+        (training_id, cur_date);
 
   SET
     cur_date = DATE_ADD(cur_date, INTERVAL 1 DAY);
