@@ -10,6 +10,33 @@ function init() {
     const mySql = await mysqlpool
 
     try {
+      console.log('- Drop foreign keys from database')
+
+      const [res] = await mySql.query(`
+        SELECT
+          TABLE_SCHEMA, TABLE_NAME, CONSTRAINT_NAME
+        FROM
+            information_schema.key_column_usage
+        WHERE
+            referenced_table_name IS NOT NULL
+                AND CONSTRAINT_SCHEMA = '${
+                  process.env.MYSQL_DATABASE || 'axis'
+                }';`)
+
+      let statement = ''
+
+      res.length &&
+        res.forEach((r) => {
+          console.log(`- ${r.CONSTRAINT_NAME}`)
+          statement += `ALTER TABLE ${r.TABLE_SCHEMA}.${r.TABLE_NAME} DROP FOREIGN KEY ${r.CONSTRAINT_NAME};`
+        })
+
+      if (statement) {
+        await mySql.query(statement)
+      }
+
+      console.log()
+
       const functionsPath = path.join(__dirname, '..', 'schema', 'functions')
 
       await fs.readdirSync(functionsPath).map(async (fileName) => {
@@ -30,7 +57,10 @@ function init() {
           reject(message)
         }
       })
-    } catch (error) {}
+    } catch (error) {
+      console.dir(error)
+      reject(error)
+    }
   })
 }
 

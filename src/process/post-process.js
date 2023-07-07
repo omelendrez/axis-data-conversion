@@ -97,6 +97,9 @@ const convertData = async () => {
     await mySql.query('DROP TABLE IF EXISTS nationalities;')
     await mySql.query('DROP TABLE IF EXISTS nationality;')
     await mySql.query('RENAME TABLE nationality2 TO nationality;')
+    await mySql.query(
+      'ALTER TABLE nationality ADD INDEX nationality_code_idx (code ASC) VISIBLE;'
+    )
 
     console.log('- Update state for foreigner learners.')
     await mySql.query(
@@ -207,16 +210,12 @@ const convertData = async () => {
 
     await mySql.query('DROP TABLE IF EXISTS training_attendance')
     await mySql.query(
-      'CREATE TABLE training_attendance (training INT NOT NULL, date DATE NOT NULL, signature_file VARCHAR(100) DEFAULT NULL);'
+      'CREATE TABLE training_attendance (training INT NOT NULL, date DATE NOT NULL, signature_file VARCHAR(100) DEFAULT NULL, FOREIGN KEY(training) REFERENCES training(id), PRIMARY KEY(training, date));'
     )
-    await mySql.query(
-      'ALTER TABLE training_attendance ADD INDEX training_attendance_training_idx (training ASC, date ASC) VISIBLE;'
-    )
-
     console.log('- Create classroom table.')
     await mySql.query('DROP TABLE IF EXISTS classroom;')
     await mySql.query(
-      'CREATE TABLE classroom (id INT NOT NULL AUTO_INCREMENT,course SMALLINT NOT NULL,start DATE NOT NULL,learners TINYINT,PRIMARY KEY (id));'
+      'CREATE TABLE classroom (id INT NOT NULL AUTO_INCREMENT,course SMALLINT NOT NULL,start DATE NOT NULL, learners TINYINT DEFAULT 0, PRIMARY KEY (id));'
     )
 
     console.log('- Generate classroom table records.')
@@ -224,22 +223,22 @@ const convertData = async () => {
       'INSERT INTO classroom (course, start, learners) SELECT course, start, count(1) FROM training GROUP BY course,start ORDER BY start;'
     )
 
-    console.log('- Create assesments table.')
+    console.log('- Create assessments table.')
 
-    await mySql.query('DROP TABLE IF EXISTS course_assesment;')
+    await mySql.query('DROP TABLE IF EXISTS course_assessment;')
     await mySql.query(
-      'CREATE TABLE course_assesment (id SMALLINT NOT NULL AUTO_INCREMENT, name VARCHAR(100), PRIMARY KEY (id));'
+      'CREATE TABLE course_assessment (id SMALLINT NOT NULL AUTO_INCREMENT, name VARCHAR(100), PRIMARY KEY (id));'
     )
 
     await mySql.query(
-      'INSERT INTO course_assesment VALUES(1, "Generic assesment");'
+      'INSERT INTO course_assessment VALUES(1, "Generic assessment");'
     )
 
-    console.log('- Create course/assesments relationship table.')
+    console.log('- Create course/assessments relationship table.')
 
-    mySql.query('DROP TABLE IF EXISTS course_assesment_rel;')
     mySql.query(
-      'CREATE TABLE course_assesment_rel (id INT NOT NULL AUTO_INCREMENT, course SMALLINT, assesment SMALLINT, PRIMARY KEY (id));'
+      `DROP TABLE IF EXISTS course_assessment_rel;
+      CREATE TABLE course_assessment_rel (course SMALLINT, assessment SMALLINT, PRIMARY KEY (course, assessment));`
     )
 
     console.log('- Create training medical table.')
@@ -248,10 +247,10 @@ const convertData = async () => {
       'CREATE TABLE training_medical (training INT, systolic SMALLINT, diastolic SMALLINT, PRIMARY KEY (training));'
     )
 
-    console.log('- Create training assesment table.')
-    await mySql.query('DROP TABLE IF EXISTS training_assesment')
+    console.log('- Create training assessment table.')
+    await mySql.query('DROP TABLE IF EXISTS training_assessment')
     await mySql.query(
-      'CREATE TABLE training_assesment (training INT, assesment SMALLINT, status TINYINT, PRIMARY KEY (training));'
+      'CREATE TABLE training_assessment (training INT, assessment SMALLINT, status TINYINT, PRIMARY KEY (training));'
     )
 
     console.log('- Update training finance status.')
@@ -269,6 +268,7 @@ const convertData = async () => {
       const query = file?.query
 
       if (query) {
+        console.log(`- Create stored procedure ${fileName}`)
         await mySql.query(query)
       } else {
         console.log(`Couldn't load file ${fullPath}`)
@@ -285,7 +285,7 @@ const convertData = async () => {
 
     console.log('- Execute stored procedure')
 
-    let processed = 1000
+    let processed = 100
     let last_training_id = 0
     do {
       const query = `call generate_legacy_attendance(${last_training_id})`
@@ -295,7 +295,7 @@ const convertData = async () => {
       const [res] = await mySql.query(query)
       last_training_id = await res[0][0].training_id
 
-      processed += 1000
+      processed += 100
     } while (typeof last_training_id === 'number' && isFinite(last_training_id))
 
     writePercent(100)
@@ -304,6 +304,100 @@ const convertData = async () => {
     console.log('- Drop stored procedure')
 
     mySql.query('DROP PROCEDURE IF EXISTS generate_legacy_attendance;')
+
+    console.log('- Adding foreign keys to tables')
+
+    await mySql.query(
+      `ALTER TABLE user_role
+      ADD FOREIGN KEY(user) REFERENCES user(id),
+      ADD FOREIGN KEY(role) REFERENCES role(id);`
+    )
+
+    await mySql.query(
+      `ALTER TABLE training
+      ADD FOREIGN KEY(learner) REFERENCES learner(id),
+      ADD FOREIGN KEY(course) REFERENCES course(id),
+      ADD FOREIGN KEY(status) REFERENCES status(id);`
+    )
+
+    await mySql.query(
+      `ALTER TABLE training_assessment
+      ADD FOREIGN KEY(training) REFERENCES training(id),
+      ADD FOREIGN KEY(assessment) REFERENCES course_assessment(id);`
+    )
+
+    await mySql.query(
+      `ALTER TABLE training_attendance
+      ADD FOREIGN KEY(training) REFERENCES training(id);`
+    )
+
+    await mySql.query(
+      `ALTER TABLE training_medical
+      ADD FOREIGN KEY(training) REFERENCES training(id);`
+    )
+
+    await mySql.query(
+      `UPDATE training_tracking SET user = 1 WHERE user = 0;
+      DELETE FROM training_tracking WHERE training NOT IN (SELECT id FROM training);
+      DELETE FROM training_tracking WHERE user NOT IN (SELECT id FROM user);
+      `
+    )
+
+    await mySql.query(
+      `ALTER TABLE training_tracking
+      ADD FOREIGN KEY(user) REFERENCES user(id),
+      ADD FOREIGN KEY(status) REFERENCES status(id),
+      ADD FOREIGN KEY(training) REFERENCES training(id);`
+    )
+
+    await mySql.query(
+      `ALTER TABLE contact_info
+      ADD FOREIGN KEY(learner) REFERENCES learner(id),
+      ADD FOREIGN KEY(type) REFERENCES contact_type(id);`
+    )
+    await mySql.query(
+      `ALTER TABLE classroom
+      ADD FOREIGN KEY(course) REFERENCES course(id);`
+    )
+
+    await mySql.query(
+      `ALTER TABLE course
+      ADD FOREIGN KEY(cert_type) REFERENCES certificate_type(id);`
+    )
+
+    await mySql.query(
+      `ALTER TABLE course_item_rel
+      ADD FOREIGN KEY(course) REFERENCES course(id),
+      ADD FOREIGN KEY(item) REFERENCES course_item(id);`
+    )
+
+    await mySql.query(
+      `ALTER TABLE course_assessment_rel
+      ADD FOREIGN KEY(course) REFERENCES course(id),
+      ADD FOREIGN KEY(assessment) REFERENCES course_assessment(id);`
+    )
+
+    await mySql.query(`UPDATE learner SET sex = 'M' WHERE sex = '';`)
+
+    await mySql.query(
+      `ALTER TABLE learner
+      ADD FOREIGN KEY(title) REFERENCES title(id),
+      ADD FOREIGN KEY(sex) REFERENCES sex(id),
+      ADD FOREIGN KEY(state) REFERENCES state(id),
+      ADD FOREIGN KEY(nationality) REFERENCES nationality(id),
+      ADD FOREIGN KEY(company) REFERENCES company(id);
+      `
+    )
+
+    await mySql.query(
+      `DELETE FROM certificate
+       WHERE training NOT IN (SELECT id FROM training);`
+    )
+
+    await mySql.query(
+      `ALTER TABLE certificate
+      ADD FOREIGN KEY(training) REFERENCES training(id);`
+    )
 
     const query2 = 'SELECT COUNT(1) records FROM training_attendance;'
     const [res2] = await mySql.query(query2)
@@ -335,7 +429,7 @@ const convertData = async () => {
     console.log('- Create user/role relationship table.')
     await mySql.query('DROP TABLE IF EXISTS user_role')
     await mySql.query(
-      'CREATE TABLE user_role (id INT NOT NULL AUTO_INCREMENT, user SMALLINT, role SMALLINT, PRIMARY KEY (id));'
+      'CREATE TABLE user_role (user SMALLINT NOT NULL, role SMALLINT NOT NULL, PRIMARY KEY (user, role));'
     )
 
     console.log('- Update dev email address.')

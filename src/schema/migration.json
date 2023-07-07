@@ -30,7 +30,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS user;",
-    "create": "CREATE TABLE user (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(100) NOT NULL, full_name VARCHAR(100), password VARCHAR(100), email VARCHAR(100), status TINYINT NOT NULL, PRIMARY KEY (id));",
+    "create": "CREATE TABLE user (id SMALLINT NOT NULL AUTO_INCREMENT, name VARCHAR(100) NOT NULL, full_name VARCHAR(100), password VARCHAR(100), email VARCHAR(100), status TINYINT NOT NULL, PRIMARY KEY (id));",
     "insert": "INSERT INTO user (id, name, full_name, password, email, status) VALUES ?"
   },
   {
@@ -159,7 +159,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS company;",
-    "create": "CREATE TABLE company (id INT NOT NULL AUTO_INCREMENT, code VARCHAR(100) NOT NULL, name VARCHAR(100) NOT NULL, status TINYINT NOT NULL, PRIMARY KEY (id));",
+    "create": "CREATE TABLE company (id SMALLINT NOT NULL AUTO_INCREMENT, code VARCHAR(100) NOT NULL, name VARCHAR(100) NOT NULL, status TINYINT NOT NULL, PRIMARY KEY (id));",
     "insert": "INSERT INTO company VALUES ?",
     "index": "ALTER TABLE company ADD INDEX company_code_idx (code ASC) VISIBLE;"
   },
@@ -170,7 +170,7 @@
     "fields": [
       {
         "source": "RecordID",
-        "destination": "record"
+        "destination": "training"
       },
       {
         "source": "Certificate_number",
@@ -178,7 +178,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS certificate;",
-    "create": "CREATE TABLE certificate (record INT, number INT);",
+    "create": "CREATE TABLE certificate (training INT, number INT, PRIMARY KEY (training, number));",
     "insert": "INSERT INTO certificate VALUES ?"
   },
   {
@@ -233,7 +233,7 @@
     ],
     "drop": "DROP TABLE IF EXISTS course;",
     "create": "CREATE TABLE course (id SMALLINT NOT NULL AUTO_INCREMENT, code CHAR(3) NOT NULL, name VARCHAR(100), front_id_text VARCHAR(100), back_id_text VARCHAR(100), id_card TINYINT, duration TINYINT, validity TINYINT, cert_type TINYINT, expiry_type TINYINT DEFAULT 1, opito_reg_code VARCHAR(100), PRIMARY KEY (id));",
-    "insert": "INSERT INTO course (id, code, name, front_id_text, back_id_text, id_card, duration, validity, cert_type, opito_reg_code)VALUES ?",
+    "insert": "INSERT INTO course (id, code, name, front_id_text, back_id_text, id_card, duration, validity, cert_type, opito_reg_code) VALUES ?",
     "index": "ALTER TABLE course ADD INDEX course_code_idx (code ASC) VISIBLE;"
   },
   {
@@ -241,10 +241,6 @@
     "destinationTableName": "course_item_rel",
     "isDone": false,
     "fields": [
-      {
-        "source": "ID",
-        "destination": "id"
-      },
       {
         "source": "CourseID",
         "destination": "course"
@@ -255,7 +251,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS course_item_rel;",
-    "create": "CREATE TABLE course_item_rel (id INT NOT NULL AUTO_INCREMENT, course SMALLINT, item SMALLINT, PRIMARY KEY (id));",
+    "create": "CREATE TABLE course_item_rel (course SMALLINT, item SMALLINT, PRIMARY KEY (course,item));",
     "insert": "INSERT INTO course_item_rel VALUES ?"
   },
   {
@@ -291,7 +287,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS certificate_type;",
-    "create": "CREATE TABLE certificate_type (id CHAR(1) NOT NULL, name VARCHAR(100) NOT NULL, PRIMARY KEY (id));",
+    "create": "CREATE TABLE certificate_type (id TINYINT NOT NULL AUTO_INCREMENT, name VARCHAR(100) NOT NULL, PRIMARY KEY (id));",
     "insert": "INSERT INTO certificate_type VALUES ?"
   },
   {

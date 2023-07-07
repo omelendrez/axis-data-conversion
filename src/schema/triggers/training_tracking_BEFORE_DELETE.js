@@ -31,7 +31,7 @@ BEFORE
 
   IF training_status = 6 THEN
     DELETE FROM
-      training_assesment
+      training_assessment
     WHERE
       training = training_id;
   END IF;

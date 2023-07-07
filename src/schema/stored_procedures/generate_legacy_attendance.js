@@ -14,12 +14,12 @@ DECLARE training_cursor CURSOR FOR
 SELECT
   id,
   start,
-end
+  end
 FROM
   training
 WHERE
   id > last_training_id
-LIMIT 1000;
+LIMIT 100;
 
 DECLARE CONTINUE HANDLER FOR NOT FOUND
 SET
