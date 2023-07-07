@@ -238,7 +238,7 @@ const convertData = async () => {
 
     mySql.query(
       `DROP TABLE IF EXISTS course_assessment_rel;
-      CREATE TABLE course_assessment_rel (course SMALLINT, assessment SMALLINT, PRIMARY KEY (course, assessment));`
+      CREATE TABLE course_assessment_rel (id INT NOT NULL AUTO_INCREMENT, course SMALLINT, assessment SMALLINT, PRIMARY KEY (id));`
     )
 
     console.log('- Create training medical table.')

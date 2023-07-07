@@ -242,6 +242,10 @@
     "isDone": false,
     "fields": [
       {
+        "source": "ID",
+        "destination": "id"
+      },
+      {
         "source": "CourseID",
         "destination": "course"
       },
@@ -251,7 +255,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS course_item_rel;",
-    "create": "CREATE TABLE course_item_rel (course SMALLINT, item SMALLINT, PRIMARY KEY (course,item));",
+    "create": "CREATE TABLE course_item_rel (id INT NOT NULL AUTO_INCREMENT, course SMALLINT, item SMALLINT, PRIMARY KEY (id));",
     "insert": "INSERT INTO course_item_rel VALUES ?"
   },
   {
