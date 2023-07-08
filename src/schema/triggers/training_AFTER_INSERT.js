@@ -13,7 +13,7 @@ WHERE
     course = NEW.course
     AND start = NEW.start;
 
-IF classroom_id IS NULL THEN
+IF classroom_id = 0 THEN
     INSERT INTO
         classroom (course, start)
     VALUES
