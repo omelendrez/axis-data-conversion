@@ -27,7 +27,7 @@ function init() {
 
       res.length &&
         res.forEach((r) => {
-          console.log(`- ${r.CONSTRAINT_NAME}`)
+          console.log(` . ${r.CONSTRAINT_NAME}`)
           statement += `ALTER TABLE ${r.TABLE_SCHEMA}.${r.TABLE_NAME} DROP FOREIGN KEY ${r.CONSTRAINT_NAME};`
         })
 

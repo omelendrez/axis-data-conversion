@@ -1,5 +1,5 @@
-module.exports.query = `CREATE TRIGGER training_AFTER_DELETE
-AFTER
+module.exports.query = `CREATE TRIGGER training_BEFORE_DELETE
+BEFORE
     DELETE ON training FOR EACH ROW BEGIN
 
 DECLARE classroom_id INT default 0;
