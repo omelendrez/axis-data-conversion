@@ -259,7 +259,7 @@ const convertData = async () => {
     console.log('- Create user/role relationship table.')
     await mySql.query('DROP TABLE IF EXISTS user_role')
     await mySql.query(
-      'CREATE TABLE user_role (user SMALLINT NOT NULL, role SMALLINT NOT NULL, PRIMARY KEY (user, role));'
+      'CREATE TABLE user_role (id INT NOT NULL AUTO_INCREMENT, user SMALLINT NOT NULL, role SMALLINT NOT NULL, PRIMARY KEY (id));'
     )
 
     // console.log(
