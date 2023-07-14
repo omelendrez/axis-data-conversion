@@ -223,6 +223,10 @@ const convertData = async () => {
       'INSERT INTO classroom (course, start, learners) SELECT course, start, count(1) FROM training GROUP BY course,start ORDER BY start;'
     )
 
+    console.log('- Set generated classroom id into training table.')
+    await mySql.query(
+      'UPDATE classroom c INNER JOIN training t ON c.course = t.course AND c.start = t.start SET classroom = c.id;'
+    )
     console.log('- Create assessments table.')
 
     await mySql.query('DROP TABLE IF EXISTS course_assessment;')

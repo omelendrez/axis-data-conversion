@@ -83,6 +83,13 @@ IF NEW.course <> OLD.course OR NEW.start <> OLD.start THEN
 			id = classroom_id;
 	END IF;
 
+	UPDATE
+    training
+	SET
+			classroom = classroom_id
+	WHERE
+			id = NEW.id;
+
 END IF;
 
 END

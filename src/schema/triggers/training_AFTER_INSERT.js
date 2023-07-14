@@ -31,5 +31,13 @@ SET
     learners = learners + 1
 WHERE
     id = classroom_id;
+
+    UPDATE
+    training
+SET
+    classroom = classroom_id
+WHERE
+    id = NEW.id;
+
 END
 `
