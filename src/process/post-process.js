@@ -210,13 +210,13 @@ const convertData = async () => {
 
     await mySql.query('DROP TABLE IF EXISTS training_attendance')
     await mySql.query(
-      'CREATE TABLE training_attendance (training INT NOT NULL, date DATE NOT NULL, signature_file VARCHAR(100) DEFAULT NULL, FOREIGN KEY(training) REFERENCES training(id), PRIMARY KEY(training, date));'
+      'CREATE TABLE training_attendance (training INT NOT NULL, date DATE NOT NULL, signature_file VARCHAR(100) DEFAULT NULL, PRIMARY KEY(training, date));'
     )
     console.log('- Create classroom table.')
     await mySql.query('DROP TABLE IF EXISTS classroom;')
 
     await mySql.query(
-      'CREATE TABLE classroom (id INT NOT NULL AUTO_INCREMENT,course SMALLINT NOT NULL,start DATE NOT NULL, learners TINYINT DEFAULT 0, PRIMARY KEY (id));'
+      'CREATE TABLE classroom (id INT NOT NULL AUTO_INCREMENT,course SMALLINT NOT NULL,start DATE NOT NULL, learners TINYINT DEFAULT 0, instructor SMALLINT, PRIMARY KEY (id));'
     )
 
     await mySql.query(
@@ -379,7 +379,8 @@ const convertData = async () => {
     console.log(' . classroom')
     await mySql.query(
       `ALTER TABLE classroom
-      ADD FOREIGN KEY(course) REFERENCES course(id);`
+      ADD FOREIGN KEY(course) REFERENCES course(id),
+      ADD FOREIGN KEY(instructor) REFERENCES user(id);`
     )
 
     console.log(' . course')
