@@ -212,28 +212,8 @@ const convertData = async () => {
     await mySql.query(
       'CREATE TABLE training_attendance (training INT NOT NULL, date DATE NOT NULL, signature_file VARCHAR(100) DEFAULT NULL, PRIMARY KEY(training, date));'
     )
-    console.log('- Create classroom table.')
-    await mySql.query('DROP TABLE IF EXISTS classroom;')
 
-    await mySql.query(
-      'CREATE TABLE classroom (id INT NOT NULL AUTO_INCREMENT,course SMALLINT NOT NULL,start DATE NOT NULL, learners TINYINT DEFAULT 0, instructor SMALLINT, PRIMARY KEY (id));'
-    )
-
-    await mySql.query(
-      'ALTER TABLE classroom ADD INDEX classroom_course_start_idx (course ASC, start ASC) VISIBLE;'
-    )
-
-    console.log('- Generate classroom table records.')
-    await mySql.query(
-      'INSERT INTO classroom (course, start, learners) SELECT course, start, count(1) FROM training GROUP BY course,start ORDER BY start;'
-    )
-
-    console.log('- Set generated classroom id into training table.')
-    await mySql.query(
-      'UPDATE classroom c INNER JOIN training t ON c.course = t.course AND c.start = t.start SET classroom = c.id;'
-    )
     console.log('- Create assessments table.')
-
     await mySql.query('DROP TABLE IF EXISTS course_assessment;')
     await mySql.query(
       'CREATE TABLE course_assessment (id SMALLINT NOT NULL AUTO_INCREMENT, name VARCHAR(100), PRIMARY KEY (id));'
@@ -374,13 +354,6 @@ const convertData = async () => {
       `ALTER TABLE contact_info
       ADD FOREIGN KEY(learner) REFERENCES learner(id),
       ADD FOREIGN KEY(type) REFERENCES contact_type(id);`
-    )
-
-    console.log(' . classroom')
-    await mySql.query(
-      `ALTER TABLE classroom
-      ADD FOREIGN KEY(course) REFERENCES course(id),
-      ADD FOREIGN KEY(instructor) REFERENCES user(id);`
     )
 
     console.log(' . course')
