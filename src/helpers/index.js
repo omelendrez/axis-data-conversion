@@ -12,4 +12,20 @@ const writePercent = (percent) => {
   process.stdout.write(`- Processing ... ${percent}%`)
 }
 
-module.exports = { formatConsole, writePercent }
+const STATUS = {
+  NEW_RECORD: 1,
+  ADMIN_DONE: 2,
+  FRONTDESK_DONE: 3,
+  MEDIC_DONE: 4,
+  TC_DONE: 5,
+  ASSESMENT_DONE: 6,
+  QAQC_DONE: 7,
+  FINANCE_DONE: 8,
+  MD_DONE: 9,
+  CERTIFICATE_PRINT_DONE: 10,
+  ID_PRINT_DONE: 11,
+  COMPLETED: 12,
+  CANCELLED: 13
+}
+
+module.exports = { formatConsole, writePercent, STATUS }

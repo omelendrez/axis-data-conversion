@@ -2,7 +2,7 @@ const mssql = require('../mssql/mssql-connect')
 const mysqlpool = require('../mysql/mysql-connect')
 const bcrypt = require('bcrypt')
 
-const { formatConsole } = require('../helpers')
+const { formatConsole, STATUS } = require('../helpers')
 
 const execute = (t) => {
   return new Promise(async (resolve, reject) => {
@@ -162,18 +162,22 @@ const addTracking = (t) => {
         const status = []
         fields.forEach(async (f) => {
           if (r[f.date] && r[f.user] !== null) {
-            for (let st = 1; st <= f.status; st++) {
+            for (let st = STATUS.NEW_RECORD; st <= f.status; st++) {
               if (!status.includes(st)) {
                 values.push([r.ID, st, r[f.user], r[f.date]])
                 status.push(st)
               }
             }
           }
-          // const complete = 12
-          // if (status.length > 9 && !status.includes(complete)) {
-          //   values.push([r.ID, complete, r[f.user], r[f.date]])
-          //   status.push(complete)
-          // }
+          const completed = STATUS.COMPLETED
+          if (
+            (status.includes(STATUS.CERTIFICATE_PRINT_DONE) ||
+              status.includes(STATUS.ID_PRINT_DONE)) &&
+            !status.includes(completed)
+          ) {
+            values.push([r.ID, completed, r[f.user], r[f.date]])
+            status.push(completed)
+          }
         })
       })
 

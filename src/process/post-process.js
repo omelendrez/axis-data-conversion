@@ -214,8 +214,13 @@ const convertData = async () => {
     )
     console.log('- Create classroom table.')
     await mySql.query('DROP TABLE IF EXISTS classroom;')
+
     await mySql.query(
       'CREATE TABLE classroom (id INT NOT NULL AUTO_INCREMENT,course SMALLINT NOT NULL,start DATE NOT NULL, learners TINYINT DEFAULT 0, PRIMARY KEY (id));'
+    )
+
+    await mySql.query(
+      'ALTER TABLE classroom ADD INDEX classroom_course_start_idx (course ASC, start ASC) VISIBLE;'
     )
 
     console.log('- Generate classroom table records.')
@@ -344,11 +349,17 @@ const convertData = async () => {
       ADD FOREIGN KEY(training) REFERENCES training(id);`
     )
 
-    console.log(' . training_tracking')
+    console.log(' . training_tracking set user 1 for user 0')
+    await mySql.query('UPDATE training_tracking SET user = 1 WHERE user = 0;')
+
+    console.log(' . training_tracking delete not in training')
     await mySql.query(
-      `UPDATE training_tracking SET user = 1 WHERE user = 0;
-      DELETE FROM training_tracking WHERE training NOT IN (SELECT id FROM training) OR user NOT IN (SELECT id FROM user);
-      `
+      'DELETE FROM training_tracking WHERE training NOT IN (SELECT id FROM training);'
+    )
+
+    console.log(' . training_tracking delete not in user')
+    await mySql.query(
+      'DELETE FROM training_tracking WHERE user NOT IN (SELECT id FROM user);'
     )
 
     await mySql.query(
