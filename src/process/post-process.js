@@ -251,6 +251,12 @@ const convertData = async () => {
       'CREATE TABLE user_role (id INT NOT NULL AUTO_INCREMENT, user SMALLINT NOT NULL, role SMALLINT NOT NULL, PRIMARY KEY (id));'
     )
 
+    console.log('- Create reject_reasons table.')
+    await mySql.query('DROP TABLE IF EXISTS reject_reason;')
+    await mySql.query(
+      'CREATE TABLE reject_reason (id INT NOT NULL AUTO_INCREMENT, tracking INT NOT NULL, reason VARCHAR(255), PRIMARY KEY (id));'
+    )
+
     // console.log(
     //   '- Create procedure that generates attendance from existing records.'
     // )
@@ -347,6 +353,12 @@ const convertData = async () => {
       ADD FOREIGN KEY(user) REFERENCES user(id),
       ADD FOREIGN KEY(status) REFERENCES status(id),
       ADD FOREIGN KEY(training) REFERENCES training(id);`
+    )
+
+    console.log(' . reject_reason')
+    await mySql.query(
+      `ALTER TABLE reject_reason
+      ADD FOREIGN KEY(tracking) REFERENCES training_tracking(id);`
     )
 
     console.log(' . contact_info')
