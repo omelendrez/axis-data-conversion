@@ -93,6 +93,12 @@
         "Cancelled",
         "Cancelled",
         0
+      ],
+      [
+        14,
+        "Rejected",
+        "Rejected",
+        1
       ]
     ]
   },

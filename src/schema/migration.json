@@ -159,8 +159,8 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS company;",
-    "create": "CREATE TABLE company (id SMALLINT NOT NULL AUTO_INCREMENT, code VARCHAR(100) NOT NULL, name VARCHAR(100) NOT NULL, status TINYINT NOT NULL, PRIMARY KEY (id));",
-    "insert": "INSERT INTO company VALUES ?",
+    "create": "CREATE TABLE company (id SMALLINT NOT NULL AUTO_INCREMENT, code VARCHAR(100) NOT NULL, name VARCHAR(100) NOT NULL, email VARCHAR(100), contact VARCHAR(100), status TINYINT NOT NULL, PRIMARY KEY (id));",
+    "insert": "INSERT INTO company (id, code, name, status) VALUES ?",
     "index": "ALTER TABLE company ADD INDEX company_code_idx (code ASC) VISIBLE;"
   },
   {
