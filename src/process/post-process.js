@@ -115,6 +115,9 @@ const convertData = async () => {
     await mySql.query('ALTER TABLE course DROP INDEX course_code_idx;')
     await mySql.query('ALTER TABLE course DROP COLUMN code;')
 
+    console.log('- Set courses not to require expiry date when validity = 0')
+    await mySql.query('UPDATE course SET expiry_type = 0 WHERE validity=0;')
+
     console.log('- Set FOET courses to require previous expiry date')
     await mySql.query(
       'UPDATE course SET expiry_type = 2 WHERE name like "%foet%";'
