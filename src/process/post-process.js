@@ -209,40 +209,10 @@ const convertData = async () => {
     console.log('- Remove legacy opito table.')
     await mySql.query('DROP TABLE IF EXISTS opito;')
 
-    console.log('- Create attendance table.')
-
-    await mySql.query('DROP TABLE IF EXISTS training_attendance')
-    await mySql.query(
-      'CREATE TABLE training_attendance (training INT NOT NULL, date DATE NOT NULL, signature_file VARCHAR(100) DEFAULT NULL, PRIMARY KEY(training, date));'
-    )
-
-    console.log('- Create assessments table.')
-    await mySql.query('DROP TABLE IF EXISTS course_assessment;')
-    await mySql.query(
-      'CREATE TABLE course_assessment (id SMALLINT NOT NULL AUTO_INCREMENT, name VARCHAR(100), PRIMARY KEY (id));'
-    )
-
-    await mySql.query(
-      'INSERT INTO course_assessment VALUES(1, "Generic assessment");'
-    )
-
-    console.log('- Create course/assessments relationship table.')
-
-    mySql.query(
-      `DROP TABLE IF EXISTS course_assessment_rel;
-      CREATE TABLE course_assessment_rel (id INT NOT NULL AUTO_INCREMENT, course SMALLINT, assessment SMALLINT, PRIMARY KEY (id));`
-    )
-
     console.log('- Create training medical table.')
     await mySql.query('DROP TABLE IF EXISTS training_medical;')
     await mySql.query(
       'CREATE TABLE training_medical (training INT, systolic SMALLINT, diastolic SMALLINT, PRIMARY KEY (training));'
-    )
-
-    console.log('- Create training assessment table.')
-    await mySql.query('DROP TABLE IF EXISTS training_assessment')
-    await mySql.query(
-      'CREATE TABLE training_assessment (training INT, assessment SMALLINT, status TINYINT, PRIMARY KEY (training));'
     )
 
     console.log('- Update training finance status.')
@@ -260,55 +230,6 @@ const convertData = async () => {
       'CREATE TABLE reject_reason (id INT NOT NULL AUTO_INCREMENT, tracking INT NOT NULL, reason VARCHAR(255), PRIMARY KEY (id));'
     )
 
-    // console.log(
-    //   '- Create procedure that generates attendance from existing records.'
-    // )
-
-    // const spsPath = path.join(__dirname, '..', 'schema', 'stored_procedures')
-    // await fs.readdirSync(spsPath).map(async (fileName) => {
-    //   const fullPath = path.join(spsPath, fileName)
-    //   const file = await require(fullPath)
-
-    //   const query = file?.query
-
-    //   if (query) {
-    //     console.log(`- Create stored procedure ${fileName}`)
-    //     await mySql.query(query)
-    //   } else {
-    //     console.log(`Couldn't load file ${fullPath}`)
-    //   }
-    // })
-
-    // const query = 'SELECT COUNT(1) records FROM training;'
-
-    // const [res] = await mySql.query(query)
-
-    // const totalTrainingRecs = res[0].records
-
-    // console.log(`- Training records to process: ${totalTrainingRecs}`)
-
-    // console.log('- Execute stored procedure')
-
-    // let processed = 100
-    // let last_training_id = 0
-    // do {
-    //   const query = `call generate_legacy_attendance(${last_training_id})`
-
-    //   writePercent(Math.round((processed / totalTrainingRecs) * 100))
-
-    //   const [res] = await mySql.query(query)
-    //   last_training_id = await res[0][0].training_id
-
-    //   processed += 100
-    // } while (typeof last_training_id === 'number' && isFinite(last_training_id))
-
-    // writePercent(100)
-    // console.log()
-
-    // console.log('- Drop stored procedure.')
-
-    // mySql.query('DROP PROCEDURE IF EXISTS generate_legacy_attendance;')
-
     console.log('- Adding foreign keys to tables.')
 
     console.log(' . training')
@@ -317,19 +238,6 @@ const convertData = async () => {
       ADD FOREIGN KEY(learner) REFERENCES learner(id),
       ADD FOREIGN KEY(course) REFERENCES course(id),
       ADD FOREIGN KEY(status) REFERENCES status(id);`
-    )
-
-    console.log(' . training_assessment')
-    await mySql.query(
-      `ALTER TABLE training_assessment
-      ADD FOREIGN KEY(training) REFERENCES training(id),
-      ADD FOREIGN KEY(assessment) REFERENCES course_assessment(id);`
-    )
-
-    console.log(' . training_attendance')
-    await mySql.query(
-      `ALTER TABLE training_attendance
-      ADD FOREIGN KEY(training) REFERENCES training(id);`
     )
 
     console.log(' . training_medical')
@@ -384,13 +292,6 @@ const convertData = async () => {
       ADD FOREIGN KEY(item) REFERENCES course_item(id);`
     )
 
-    console.log(' . course_assessment_rel')
-    await mySql.query(
-      `ALTER TABLE course_assessment_rel
-      ADD FOREIGN KEY(course) REFERENCES course(id),
-      ADD FOREIGN KEY(assessment) REFERENCES course_assessment(id);`
-    )
-
     console.log(' . learner')
     await mySql.query(`UPDATE learner SET sex = 'M' WHERE sex = '';`)
 
@@ -421,34 +322,8 @@ const convertData = async () => {
       ADD FOREIGN KEY(user) REFERENCES user(id),
       ADD FOREIGN KEY(role) REFERENCES role(id);`
     )
+
     console.log(' . creating tiggers')
-
-    const query2 = 'SELECT COUNT(1) records FROM training_attendance;'
-    const [res2] = await mySql.query(query2)
-
-    const totalTrainingAttendanceRecords = res2[0].records
-
-    const triggersPath = path.join(__dirname, '..', 'schema', 'triggers')
-
-    await fs.readdirSync(triggersPath).map(async (fileName) => {
-      const fullPath = path.join(triggersPath, fileName)
-      const file = await require(fullPath)
-
-      const displayTrigger = fileName.split('.')[0].split('_').join(' ')
-
-      console.log(` . ${displayTrigger}`)
-
-      const query = file?.query
-      if (query) {
-        await mySql.query(query)
-      } else {
-        console.log(`Couldn't load file ${fullPath}`)
-      }
-    })
-
-    console.log(
-      `- Training attendance records generated: ${totalTrainingAttendanceRecords}`
-    )
 
     console.log('- Update dev email address.')
     const oldDomain = 'escng'
@@ -458,6 +333,7 @@ const convertData = async () => {
     )
 
     console.log('- Add role to Ndubuisi and Omar.')
+
     await mySql.query(
       'INSERT INTO user_role (user, role) VALUES (95,1), (1023,1);'
     )
