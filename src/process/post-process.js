@@ -325,6 +325,29 @@ const convertData = async () => {
 
     console.log(' . creating tiggers')
 
+    const query2 = 'SELECT COUNT(1) records FROM training_attendance;'
+    const [res2] = await mySql.query(query2)
+
+    const totalTrainingAttendanceRecords = res2[0].records
+
+    const triggersPath = path.join(__dirname, '..', 'schema', 'triggers')
+
+    await fs.readdirSync(triggersPath).map(async (fileName) => {
+      const fullPath = path.join(triggersPath, fileName)
+      const file = await require(fullPath)
+
+      const displayTrigger = fileName.split('.')[0].split('_').join(' ')
+
+      console.log(` . ${displayTrigger}`)
+
+      const query = file?.query
+      if (query) {
+        await mySql.query(query)
+      } else {
+        console.log(`Couldn't load file ${fullPath}`)
+      }
+    })
+
     console.log('- Update dev email address.')
     const oldDomain = 'escng'
     const newDomain = 'gmail'
