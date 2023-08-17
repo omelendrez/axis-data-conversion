@@ -203,31 +203,31 @@
       ],
       [
         4,
-        "Finance"
-      ],
-      [
-        5,
         "Medic"
       ],
       [
-        6,
+        5,
         "T.C."
       ],
       [
-        7,
-        "Instructor"
+        6,
+        "Accounts"
       ],
       [
-        8,
+        7,
         "QA/QC"
       ],
       [
-        9,
+        8,
         "MD"
       ],
       [
-        10,
+        9,
         "Printer"
+      ],
+      [
+        10,
+        "Instructor"
       ]
     ]
   }
