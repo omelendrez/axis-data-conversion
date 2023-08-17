@@ -323,12 +323,7 @@ const convertData = async () => {
       ADD FOREIGN KEY(role) REFERENCES role(id);`
     )
 
-    console.log(' . creating tiggers')
-
-    const query2 = 'SELECT COUNT(1) records FROM training_attendance;'
-    const [res2] = await mySql.query(query2)
-
-    const totalTrainingAttendanceRecords = res2[0].records
+    console.log('- Creationg triggers.')
 
     const triggersPath = path.join(__dirname, '..', 'schema', 'triggers')
 
