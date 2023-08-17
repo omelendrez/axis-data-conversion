@@ -22,21 +22,7 @@ BEFORE
       training = training_id;
   END IF;
 
-  IF training_status = 5 THEN
-    DELETE FROM
-      training_attendance
-    WHERE
-      training = training_id;
-  END IF;
-
-  IF training_status = 6 THEN
-    DELETE FROM
-      training_assessment
-    WHERE
-      training = training_id;
-  END IF;
-
-  IF training_status IN (4,5,6,7,8) THEN
+  IF training_status IN (2,3,4,5,6) THEN
     UPDATE
       training
     SET

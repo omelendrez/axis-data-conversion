@@ -162,7 +162,7 @@ const addTracking = (t) => {
         const status = []
         fields.forEach(async (f) => {
           if (r[f.date] && r[f.user] !== null) {
-            for (let st = STATUS.NEW_RECORD; st <= f.status; st++) {
+            for (let st = STATUS.NEW; st <= f.status; st++) {
               if (!status.includes(st)) {
                 values.push([r.ID, st, r[f.user], r[f.date]])
                 status.push(st)
@@ -171,8 +171,8 @@ const addTracking = (t) => {
           }
           const completed = STATUS.COMPLETED
           if (
-            (status.includes(STATUS.CERTIFICATE_PRINT_DONE) ||
-              status.includes(STATUS.ID_PRINT_DONE)) &&
+            (status.includes(STATUS.CERT_PRINT_DONE) ||
+              status.includes(STATUS.ID_CARD_PRINT_DONE)) &&
             !status.includes(completed)
           ) {
             values.push([r.ID, completed, r[f.user], r[f.date]])

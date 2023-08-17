@@ -25,7 +25,7 @@
       [
         2,
         "Admin done",
-        "Waiting for Front desk",
+        "Waiting for Frontdesk",
         1
       ],
       [
@@ -43,59 +43,53 @@
       [
         5,
         "T.C. done",
-        "Waiting for Assesment",
+        "Waiting for Accounts",
         1
       ],
       [
         6,
-        "Assesment done",
-        "Waiting to QA/QC",
+        "Accounts done",
+        "Waiting for QA",
         1
       ],
       [
         7,
         "QA/QC done",
-        "Waiting for Finance",
-        1
-      ],
-      [
-        8,
-        "Finance done",
         "Waiting for MD",
         1
       ],
       [
-        9,
+        8,
         "MD done",
         "Waiting for Printer",
         1
       ],
       [
-        10,
+        9,
         "Certificate done",
-        "Waiting for Opito",
+        "",
+        1
+      ],
+      [
+        10,
+        "ID Card done",
+        "",
         1
       ],
       [
         11,
-        "ID Card done",
-        "Waiting for Opito",
-        1
+        "Completed",
+        "Completed",
+        0
       ],
       [
         12,
-        "Completed",
-        "Completed",
+        "Cancelled",
+        "Cancelled",
         0
       ],
       [
         13,
-        "Cancelled",
-        "Cancelled",
-        0
-      ],
-      [
-        14,
         "Rejected",
         "Rejected",
         1
@@ -157,7 +151,7 @@
       {
         "date": "ApprovedOn",
         "user": "ApprovedBy",
-        "status": 9
+        "status": 8
       },
       {
         "date": "Certificate_printedOn",

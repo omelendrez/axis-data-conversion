@@ -13,19 +13,19 @@ const writePercent = (percent) => {
 }
 
 const STATUS = {
-  NEW_RECORD: 1,
+  NEW: 1,
   ADMIN_DONE: 2,
   FRONTDESK_DONE: 3,
-  MEDIC_DONE: 4,
-  TC_DONE: 5,
-  ASSESMENT_DONE: 6,
-  QAQC_DONE: 7,
-  FINANCE_DONE: 8,
-  MD_DONE: 9,
-  CERTIFICATE_PRINT_DONE: 10,
-  ID_PRINT_DONE: 11,
-  COMPLETED: 12,
-  CANCELLED: 13
+  MEDICAL_DONE: 4,
+  TRAINING_COORDINATOR_DONE: 5,
+  ACCOUNTS_DONE: 6,
+  QA_DONE: 7,
+  MD_DONE: 8,
+  CERT_PRINT_DONE: 9,
+  ID_CARD_PRINT_DONE: 10,
+  COMPLETED: 11,
+  CANCELLED: 12,
+  REJECTED: 13
 }
 
 module.exports = { formatConsole, writePercent, STATUS }
