@@ -230,7 +230,7 @@ const convertData = async () => {
       'CREATE TABLE reject_reason (id INT NOT NULL AUTO_INCREMENT, tracking INT NOT NULL, reason VARCHAR(255), PRIMARY KEY (id));'
     )
 
-    console.log('- Adding foreign keys to tables.')
+    console.log('- Adding foreign keys to tables:')
 
     console.log(' . training')
     await mySql.query(
@@ -323,7 +323,7 @@ const convertData = async () => {
       ADD FOREIGN KEY(role) REFERENCES role(id);`
     )
 
-    console.log('- Creationg triggers.')
+    console.log('- Creating triggers:')
 
     const triggersPath = path.join(__dirname, '..', 'schema', 'triggers')
 

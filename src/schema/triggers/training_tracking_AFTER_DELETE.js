@@ -1,6 +1,6 @@
 module.exports.query = `CREATE TRIGGER tracking_AFTER_DELETE AFTER DELETE ON training_tracking FOR EACH ROW BEGIN
 
-  DECLARE NEW_STATUS SMALLINT;
+  DECLARE NEW_STATUS TINYINT;
 
   SELECT
     MAX(status)
