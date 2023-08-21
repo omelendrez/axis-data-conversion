@@ -13,84 +13,71 @@
     "destinationTableName": "status",
     "isDone": false,
     "drop": "DROP TABLE IF EXISTS status;",
-    "create": "CREATE TABLE status (id TINYINT NOT NULL AUTO_INCREMENT, status VARCHAR(100) NOT NULL, state VARCHAR(100) NOT NULL, continue_flow TINYINT, PRIMARY KEY (id));",
+    "create": "CREATE TABLE status (id TINYINT NOT NULL AUTO_INCREMENT, status VARCHAR(100) NOT NULL, continue_flow TINYINT, PRIMARY KEY (id));",
     "insert": "INSERT INTO status VALUES ?",
     "records": [
       [
         1,
         "New record",
-        "Waiting for Admin",
         1
       ],
       [
         2,
         "Admin done",
-        "Waiting for Frontdesk",
         1
       ],
       [
         3,
         "Front desk done",
-        "Waiting for Medic",
         1
       ],
       [
         4,
         "Medic done",
-        "Waiting for T.C.",
         1
       ],
       [
         5,
         "T.C. done",
-        "Waiting for Accounts",
         1
       ],
       [
         6,
         "Accounts done",
-        "Waiting for QA",
         1
       ],
       [
         7,
         "QA/QC done",
-        "Waiting for MD",
         1
       ],
       [
         8,
         "MD done",
-        "Waiting for Printer",
         1
       ],
       [
         9,
         "Certificate done",
-        "Waiting for Pinter (ID card)",
         1
       ],
       [
         10,
         "ID Card done",
-        "",
         1
       ],
       [
         11,
-        "Completed",
         "Completed",
         0
       ],
       [
         12,
         "Cancelled",
-        "Cancelled",
         0
       ],
       [
         13,
-        "Rejected",
         "Rejected",
         1
       ]
