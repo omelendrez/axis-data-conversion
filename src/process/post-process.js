@@ -154,7 +154,7 @@ const convertData = async () => {
       'DELETE FROM learner WHERE id NOT IN (SELECT learner FROM training);'
     )
 
-    console.log('- Delete contact info for missing learners.')
+    console.log('- Delete orphan contact info.')
     await mySql.query(
       'DELETE FROM contact_info WHERE learner NOT IN (SELECT id FROM learner);'
     )
@@ -254,9 +254,10 @@ const convertData = async () => {
       'DELETE FROM training_tracking WHERE training NOT IN (SELECT id FROM training);'
     )
 
-    console.log(' . training_tracking delete not in user')
+    console.log(' . training_tracking set user to Axis for inexisting user')
     await mySql.query(
-      'DELETE FROM training_tracking WHERE user NOT IN (SELECT id FROM user);'
+      // 'DELETE FROM training_tracking WHERE user NOT IN (SELECT id FROM user);'
+      'UPDATE training_tracking SET user=1 WHERE user NOT IN (SELECT id FROM user);'
     )
 
     await mySql.query(
