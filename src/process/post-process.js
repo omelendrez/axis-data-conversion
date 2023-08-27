@@ -227,7 +227,7 @@ const convertData = async () => {
     console.log('- Create reject_reasons table.')
     await mySql.query('DROP TABLE IF EXISTS reject_reason;')
     await mySql.query(
-      'CREATE TABLE reject_reason (id INT NOT NULL AUTO_INCREMENT, tracking INT NOT NULL, reason VARCHAR(255), PRIMARY KEY (id));'
+      'CREATE TABLE reject_reason (training INT NOT NULL, reason VARCHAR(255), PRIMARY KEY (training));'
     )
 
     console.log('- Adding foreign keys to tables:')
@@ -270,7 +270,7 @@ const convertData = async () => {
     console.log(' . reject_reason')
     await mySql.query(
       `ALTER TABLE reject_reason
-      ADD FOREIGN KEY(tracking) REFERENCES training_tracking(id);`
+      ADD FOREIGN KEY(training) REFERENCES training(id);`
     )
 
     console.log(' . contact_info')
