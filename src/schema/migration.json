@@ -365,14 +365,6 @@
         "destination": "sex"
       },
       {
-        "source": "address1",
-        "destination": "address_1"
-      },
-      {
-        "source": "address2",
-        "destination": "address_2"
-      },
-      {
         "source": "StateID",
         "destination": "state"
       },
@@ -394,8 +386,8 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS learner;",
-    "create": "CREATE TABLE learner (id INT NOT NULL AUTO_INCREMENT, type CHAR(3), badge VARCHAR(100) NOT NULL, title TINYINT, first_name VARCHAR(100) NOT NULL, middle_name VARCHAR(100) DEFAULT '', last_name VARCHAR(100) NOT NULL, sex CHAR(1) NOT NULL, address_1 VARCHAR(100) DEFAULT '', address_2 VARCHAR(100) DEFAULT '', state SMALLINT, nationality SMALLINT, birth_date DATE, company VARCHAR(100), status TINYINT NOT NULL, PRIMARY KEY (id));",
-    "insert": "INSERT INTO learner (id, type, badge, last_name, first_name, sex, address_1, address_2, state, nationality, birth_date, company, status) VALUES ?",
+    "create": "CREATE TABLE learner (id INT NOT NULL AUTO_INCREMENT, type CHAR(3), badge VARCHAR(100) NOT NULL, title TINYINT, first_name VARCHAR(100) NOT NULL, last_name VARCHAR(100) NOT NULL, sex CHAR(1) NOT NULL, state SMALLINT, nationality SMALLINT, birth_date DATE, company VARCHAR(100), status TINYINT NOT NULL, PRIMARY KEY (id));",
+    "insert": "INSERT INTO learner (id, type, badge, last_name, first_name, sex, state, nationality, birth_date, company, status) VALUES ?",
     "index": "ALTER TABLE learner ADD INDEX learner_badge_idx (badge ASC) VISIBLE;"
   },
   {

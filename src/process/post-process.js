@@ -71,14 +71,6 @@ const convertData = async () => {
   const mySql = await mysqlpool
 
   return new Promise(async (resolve, reject) => {
-    console.log("- Split learner's first_name into first and middle names.")
-    await mySql.query(
-      "UPDATE learner SET middle_name = SUBSTRING_INDEX(first_name, ' ', -1) WHERE SUBSTRING_INDEX(first_name, ' ', 1) <> SUBSTRING_INDEX(first_name, ' ', -1);"
-    )
-    await mySql.query(
-      "UPDATE learner SET first_name = SUBSTRING_INDEX(first_name, ' ', 1) WHERE SUBSTRING_INDEX(first_name, ' ', 1) <> SUBSTRING_INDEX(first_name, ' ', -1);"
-    )
-
     console.log('- Set learner title.')
 
     await mySql.query(
