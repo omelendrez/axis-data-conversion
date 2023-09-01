@@ -1,11 +1,11 @@
 module.exports.query = `CREATE TRIGGER tracking_AFTER_DELETE AFTER DELETE ON training_tracking FOR EACH ROW BEGIN
 
-  DECLARE NEW_STATUS TINYINT;
+  DECLARE v_new_status TINYINT;
 
   SELECT
     MAX(status)
   INTO
-    NEW_STATUS
+    v_new_status
   FROM
     training_tracking
   WHERE
@@ -14,7 +14,7 @@ module.exports.query = `CREATE TRIGGER tracking_AFTER_DELETE AFTER DELETE ON tra
   UPDATE
     training
   SET
-    status = CASE WHEN NEW_STATUS IS NULL THEN 0 ELSE NEW_STATUS END
+    status = CASE WHEN v_new_status IS NULL THEN 0 ELSE v_new_status END
   WHERE
     id = OLD.training;
 
