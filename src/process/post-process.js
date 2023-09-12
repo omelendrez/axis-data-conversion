@@ -207,9 +207,6 @@ const convertData = async () => {
       'CREATE TABLE training_medical (training INT, systolic SMALLINT, diastolic SMALLINT, PRIMARY KEY (training));'
     )
 
-    console.log('- Update training finance status.')
-    await mySql.query('UPDATE training SET finance_status=1;')
-
     console.log('- Create user/role relationship table.')
     await mySql.query('DROP TABLE IF EXISTS user_role')
     await mySql.query(

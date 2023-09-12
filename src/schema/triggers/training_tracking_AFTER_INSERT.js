@@ -18,7 +18,8 @@ INNER JOIN course c ON c.id = t.course
 INNER JOIN learner l ON l.id = t.learner
 WHERE t.id = v_training;
 
-IF NEW.status = 7 AND v_cert_type <> 4
+IF NEW.status = 7 -- QA_DONE
+AND v_cert_type <> 4 -- OPITO
 THEN
 
   SELECT MAX(number)+1

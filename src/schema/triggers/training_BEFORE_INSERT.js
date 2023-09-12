@@ -20,12 +20,12 @@ module.exports.query = `CREATE TRIGGER training_BEFORE_INSERT BEFORE INSERT ON t
     SET v_issued = DATE_ADD(v_start, INTERVAL v_duration DAY);
     SET v_end = DATE_ADD(v_issued, INTERVAL -1 DAY);
 
-    IF v_expiry_type = 0
+    IF v_expiry_type = 0 -- No expiration date
     THEN
         SET v_expiry = NULL;
     END IF;
 
-    IF v_expiry_type = 1
+    IF v_expiry_type = 1 -- Automatic
     THEN
         SET v_expiry = DATE_ADD(DATE_ADD(v_issued, INTERVAL v_validity YEAR), INTERVAL -1 DAY);
     END IF;

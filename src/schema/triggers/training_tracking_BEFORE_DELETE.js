@@ -2,33 +2,53 @@ module.exports.query = `CREATE TRIGGER tracking_BEFORE_DELETE
 BEFORE
   DELETE ON training_tracking FOR EACH ROW BEGIN
 
-	DECLARE training_id INT;
-
-  DECLARE training_status TINYINT;
-
-  DECLARE fromDate DATE;
-  DECLARE	toDate DATE;
-  DECLARE curDate DATE;
+	DECLARE v_training_id INT;
+  DECLARE v_training_status TINYINT;
+  DECLARE v_cert_type TINYINT;
 
   SELECT
     OLD.training, OLD.status
   INTO
-    training_id, training_status;
+    v_training_id, v_training_status;
 
-  IF training_status = 4 THEN
+  IF v_training_status = 4 THEN -- MEDIC_DONE
     DELETE FROM
       training_medical
     WHERE
-      training = training_id;
+      training = v_training_id;
   END IF;
 
-  IF training_status IN (2,3,4,5,6) THEN
-    UPDATE
-      training
-    SET
-      finance_status = null
+  IF v_training_status = 7 THEN -- QA_DONE
+    SELECT
+      cert_type
+    INTO
+      v_cert_type
+    FROM
+      course
     WHERE
-      id = training_id;
+      id = (SELECT
+              course
+            FROM
+              training
+            WHERE
+              id = v_training_id
+            );
+
+    IF v_cert_type <> 4 THEN -- OPITO
+      DELETE FROM
+        certificate
+      WHERE
+        training = v_training;
+
+      UPDATE
+        training
+      SET
+        certificate = ''
+      WHERE
+        id = v_training_id;
+
+    END IF;
+
   END IF;
 
 END`
