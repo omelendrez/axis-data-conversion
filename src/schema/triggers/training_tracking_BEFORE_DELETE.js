@@ -38,7 +38,7 @@ BEFORE
       DELETE FROM
         certificate
       WHERE
-        training = v_training;
+        training = v_training_id;
 
       UPDATE
         training

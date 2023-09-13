@@ -229,9 +229,6 @@ const convertData = async () => {
       ADD FOREIGN KEY(training) REFERENCES training(id);`
     )
 
-    console.log(' . training_tracking set user 1 for user 0')
-    await mySql.query('UPDATE training_tracking SET user = 1 WHERE user = 0;')
-
     console.log(' . training_tracking delete not in training')
     await mySql.query(
       'DELETE FROM training_tracking WHERE training NOT IN (SELECT id FROM training);'
