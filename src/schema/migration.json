@@ -132,7 +132,7 @@
       }
     ],
     "drop": "DROP TABLE IF EXISTS training;",
-    "create": "CREATE TABLE training (id INT NOT NULL AUTO_INCREMENT, learner INT NOT NULL, course CHAR(6) NOT NULL, start DATE NOT NULL, end DATE, issued DATE, prev_expiry DATE, expiry DATE, certificate VARCHAR(100), status TINYINT DEFAULT 1, opito_file VARCHAR(100) DEFAULT '', instructor SMALLINT DEFAULT NULL, reject_reason varchar(500) DEFAULT '', PRIMARY KEY (id));",
+    "create": "CREATE TABLE training (id INT NOT NULL AUTO_INCREMENT, learner INT NOT NULL, course CHAR(6) NOT NULL, start DATE NOT NULL, end DATE, issued DATE, prev_expiry DATE, expiry DATE, certificate VARCHAR(100), status TINYINT DEFAULT 1, opito_file VARCHAR(100) DEFAULT '', opito_learner VARCHAR(100) DEFAULT '',  instructor SMALLINT DEFAULT NULL, reject_reason varchar(500) DEFAULT '', PRIMARY KEY (id));",
     "insert": "INSERT INTO training (id,learner,course,start,expiry,certificate,status) VALUES ?",
     "index": "ALTER TABLE training ADD INDEX training_learner_idx (learner ASC) VISIBLE;ALTER TABLE training ADD INDEX training_course_start_idx (course ASC, start ASC) VISIBLE;ALTER TABLE training ADD INDEX training_status_idx (status ASC) VISIBLE;"
   },
