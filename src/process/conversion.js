@@ -170,12 +170,9 @@ const addTracking = (t) => {
             }
           }
           const completed = STATUS.COMPLETED
-          if (
-            (status.includes(STATUS.CERT_PRINT_DONE) ||
-              status.includes(STATUS.ID_CARD_PRINT_DONE)) &&
-            !status.includes(completed)
-          ) {
-            values.push([r.ID, completed, r[f.user], r[f.date]])
+          const canceled = STATUS.CANCELLED
+          if (!status.includes(completed) && !status.includes(canceled)) {
+            values.push([r.ID, completed, 1, r[f.date]])
             status.push(completed)
           }
         })
