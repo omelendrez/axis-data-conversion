@@ -10,7 +10,20 @@ const {
   convertData
 } = require('./process/post-process')
 
+const { formatConsole } = require('./helpers')
+
 async function run() {
+  console.log()
+  console.log(formatConsole('DATA CONVERSION CANNOT BE RUN ANYMORE!'))
+  console.log()
+  console.log(
+    formatConsole(
+      'Axis v2.0 is already alive and running data-conversion will you lose all data.'
+    )
+  )
+  console.log()
+  process.exit()
+
   try {
     console.log()
     console.log('AXIS DATA CONVERSION: Starting')
